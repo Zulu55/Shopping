@@ -20,7 +20,6 @@ namespace Shooping.Controllers
             _context = context;
         }
 
-        // GET: Countries
         public async Task<IActionResult> Index()
         {
             return View(await _context.Countries.ToListAsync());
