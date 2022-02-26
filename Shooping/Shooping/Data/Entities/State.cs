@@ -14,5 +14,9 @@ namespace Shooping.Data.Entities
         public Country Country { get; set; }
 
         public ICollection<City> Cities { get; set; }
+
+
+        [Display(Name = "Ciudades")]
+        public int CitiesNumber => Cities == null ? 0 : Cities.Count;
     }
 }

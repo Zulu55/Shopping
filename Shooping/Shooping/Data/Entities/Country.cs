@@ -12,5 +12,8 @@ namespace Shooping.Data.Entities
         public string Name { get; set; }
 
         public ICollection<State> States { get; set; }
+
+        [Display(Name = "Estados / Departamentos")]
+        public int StatesNumber =>  States == null ? 0: States.Count;
     }
 }
