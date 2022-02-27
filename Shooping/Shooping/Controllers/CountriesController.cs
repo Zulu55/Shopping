@@ -17,7 +17,7 @@ namespace Shooping.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Countries.ToListAsync());
+            return View(await _context.Countries.Include(c => c.States).ToListAsync());
         }
 
         public async Task<IActionResult> Details(int? id)
