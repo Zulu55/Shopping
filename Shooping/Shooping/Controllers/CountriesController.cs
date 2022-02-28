@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shooping.Data;
 using Shooping.Data.Entities;
+using Shooping.Models;
 
 namespace Shooping.Controllers
 {
@@ -28,6 +29,8 @@ namespace Shooping.Controllers
             }
 
             Country country = await _context.Countries
+                .Include(c => c.States)
+                .ThenInclude(s => s.Cities)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (country == null)
             {
@@ -77,6 +80,67 @@ namespace Shooping.Controllers
                 }
             }
             return View(country);
+        }
+
+        public async Task<IActionResult> CreateState(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Country country = await _context.Countries.FindAsync(id);
+            if (country == null)
+            {
+                return NotFound();
+            }
+
+            StateViewModel model = new()
+            {
+                CountryId = country.Id,
+            };
+
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateState(StateViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Country country = await _context.Countries.FindAsync(model.CountryId);
+                State state = new()
+                {
+                    Cities = new List<City>(),
+                    Country = country,
+                    Name = model.Name
+                };
+                _context.Add(state);
+                try
+                {
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Details), new { Id = state.Country.Id });
+
+                }
+                catch (DbUpdateException dbUpdateException)
+                {
+                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                    {
+                        ModelState.AddModelError(string.Empty, "Ya existe un departamento/estado con el mismo nombre.");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, dbUpdateException.InnerException.Message);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    ModelState.AddModelError(string.Empty, exception.Message);
+                }
+            }
+            return View(model);
         }
 
         public async Task<IActionResult> Edit(int? id)
