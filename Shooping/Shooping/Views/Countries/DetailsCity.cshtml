@@ -1,0 +1,15 @@
+﻿@model Shooping.Data.Entities.City
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Detalles</h1>
+
+<div>
+    <partial name="_CityDetails" />    
+</div>
+<div>
+    <a asp-action="EditCity" asp-route-id="@Model?.Id" class="btn btn-outline-warning">Editar</a>
+    <a asp-action="DetailsState"  asp-route-id="@Model?.State.Id" class="btn btn-outline-success">Regresar</a>
+</div>
