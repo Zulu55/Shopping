@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Shooping.Data;
+using Shooping.Helpers;
 
 WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,9 @@ builder.Services.AddDbContext<DataContext>(o =>
 });
 
 builder.Services.AddTransient<SeedDb>();
+builder.Services.AddScoped<ICombosHelper, CombosHelper>();
+builder.Services.AddScoped<IBlobHelper, BlobHelper>();
+
 
 WebApplication? app = builder.Build();
 SeedData(app);
