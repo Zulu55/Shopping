@@ -40,7 +40,7 @@ namespace Shooping.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("Shooping.Data.Entities.City", b =>
@@ -66,7 +66,7 @@ namespace Shooping.Migrations
                     b.HasIndex("Name", "StateId")
                         .IsUnique();
 
-                    b.ToTable("Cities");
+                    b.ToTable("Cities", (string)null);
                 });
 
             modelBuilder.Entity("Shooping.Data.Entities.Country", b =>
@@ -87,7 +87,7 @@ namespace Shooping.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Countries");
+                    b.ToTable("Countries", (string)null);
                 });
 
             modelBuilder.Entity("Shooping.Data.Entities.Product", b =>
@@ -119,7 +119,7 @@ namespace Shooping.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("Shooping.Data.Entities.ProductCategory", b =>
@@ -142,7 +142,7 @@ namespace Shooping.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductCategories");
+                    b.ToTable("ProductCategories", (string)null);
                 });
 
             modelBuilder.Entity("Shooping.Data.Entities.ProductImage", b =>
@@ -163,7 +163,7 @@ namespace Shooping.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("ProductImages", (string)null);
                 });
 
             modelBuilder.Entity("Shooping.Data.Entities.State", b =>
@@ -189,7 +189,7 @@ namespace Shooping.Migrations
                     b.HasIndex("Name", "CountryId")
                         .IsUnique();
 
-                    b.ToTable("States");
+                    b.ToTable("States", (string)null);
                 });
 
             modelBuilder.Entity("Shooping.Data.Entities.City", b =>

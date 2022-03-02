@@ -24,7 +24,7 @@ namespace Shooping.Helpers
                 Name = model.Name,
                 Price = model.Price,
                 ProductCategories = new List<ProductCategory>() { new ProductCategory { Category = await _context.Categories.FindAsync(model.CategoryId) } },
-                ProductImages = new List<ProductImage>() { new ProductImage { ImageId = imageId } },
+                ProductImages = imageId != Guid.Empty ? new List<ProductImage>() { new ProductImage { ImageId = imageId } } : new List<ProductImage>(),
                 Stock = model.Stock,
             };
         }

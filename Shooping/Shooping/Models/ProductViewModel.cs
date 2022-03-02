@@ -12,9 +12,9 @@ namespace Shooping.Models
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Name { get; set; }
 
-        [DataType(DataType.MultilineText)]
         [Display(Name = "Descripción")]
         [MaxLength(500, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Description { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:C2}")]
@@ -35,6 +35,7 @@ namespace Shooping.Models
         public IEnumerable<SelectListItem> Categories { get; set; }
 
         [Display(Name = "Foto")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public IFormFile ImageFile { get; set; }
     }
 }

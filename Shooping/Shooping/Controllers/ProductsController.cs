@@ -77,6 +77,7 @@ namespace Shooping.Controllers
                     ModelState.AddModelError(string.Empty, exception.Message);
                 }
             }
+
             return View(model);
         }
     }
