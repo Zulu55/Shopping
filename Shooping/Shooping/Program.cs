@@ -14,8 +14,7 @@ builder.Services.AddDbContext<DataContext>(o =>
 builder.Services.AddTransient<SeedDb>();
 builder.Services.AddScoped<ICombosHelper, CombosHelper>();
 builder.Services.AddScoped<IBlobHelper, BlobHelper>();
-builder.Services.AddScoped<IConverterHelper, ConverterHelper>();
-
+builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 WebApplication? app = builder.Build();
 SeedData(app);

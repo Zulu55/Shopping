@@ -1,21 +1,21 @@
-﻿@model Shooping.Models.CreateProductViewModel
+﻿@model Shooping.Models.EditProductViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
 
-<h1>Crear</h1>
+<h1>Editar</h1>
 
 <h4>Producto</h4>
 <hr />
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="Create" enctype="multipart/form-data">
+        <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Categories" />
-            <partial name="_CreateProduct"/>
+            <input type="hidden" asp-for="Id" />
+            <partial name="_EditProduct"/>
             <div class="form-group mt-2">
-                <input type="submit" value="Crear" class="btn btn-outline-primary" />
+                <input type="submit" value="Guardar" class="btn btn-outline-primary" />
                 <a asp-action="Index" class="btn btn-outline-success">Regresar</a>
             </div>
         </form>
