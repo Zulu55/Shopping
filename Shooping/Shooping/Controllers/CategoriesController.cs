@@ -1,40 +1,22 @@
-﻿#nullable disable
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shooping.Data;
 using Shooping.Data.Entities;
 
 namespace Shooping.Controllers
 {
-    public class CountriesController : Controller
+    public class CategoriesController : Controller
     {
         private readonly DataContext _context;
 
-        public CountriesController(DataContext context)
+        public CategoriesController(DataContext context)
         {
             _context = context;
         }
 
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Countries.ToListAsync());
-        }
-
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            Country country = await _context.Countries
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (country == null)
-            {
-                return NotFound();
-            }
-
-            return View(country);
+            return View(await _context.Categories.ToListAsync());
         }
 
         public IActionResult Create()
@@ -44,13 +26,13 @@ namespace Shooping.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Country country)
+        public async Task<IActionResult> Create(Category category)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Add(country);
+                    _context.Add(category);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -58,7 +40,7 @@ namespace Shooping.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe un país con el mismo nombre.");
+                        ModelState.AddModelError(string.Empty, "Ya existe una categoría con el mismo nombre.");
                     }
                     else
                     {
@@ -71,7 +53,7 @@ namespace Shooping.Controllers
                 }
             }
 
-            return View(country);
+            return View(category);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -81,20 +63,20 @@ namespace Shooping.Controllers
                 return NotFound();
             }
 
-            Country country = await _context.Countries.FindAsync(id);
-            if (country == null)
+            Category category = await _context.Categories.FindAsync(id);
+            if (category == null)
             {
                 return NotFound();
             }
 
-            return View(country);
+            return View(category);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Country country)
+        public async Task<IActionResult> Edit(int id, Category category)
         {
-            if (id != country.Id)
+            if (id != category.Id)
             {
                 return NotFound();
             }
@@ -103,7 +85,7 @@ namespace Shooping.Controllers
             {
                 try
                 {
-                    _context.Update(country);
+                    _context.Update(category);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
@@ -111,7 +93,7 @@ namespace Shooping.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe un país con el mismo nombre.");
+                        ModelState.AddModelError(string.Empty, "Ya existe una categoría con el mismo nombre.");
                     }
                     else
                     {
@@ -124,7 +106,23 @@ namespace Shooping.Controllers
                 }
             }
 
-            return View(country);
+            return View(category);
+        }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Category category = await _context.Categories.FindAsync(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            return View(category);
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -134,21 +132,21 @@ namespace Shooping.Controllers
                 return NotFound();
             }
 
-            Country country = await _context.Countries.FindAsync(id);
-            if (country == null)
+            Category category = await _context.Categories.FindAsync(id);
+            if (category == null)
             {
                 return NotFound();
             }
 
-            return View(country);
+            return View(category);
         }
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            Country country = await _context.Countries.FindAsync(id);
-            _context.Countries.Remove(country);
+            Category category = await _context.Categories.FindAsync(id);
+            _context.Categories.Remove(category);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
