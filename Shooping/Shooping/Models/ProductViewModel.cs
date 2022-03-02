@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel.DataAnnotations;
 
-namespace Shooping.Data.Entities
+namespace Shooping.Models
 {
-    public class Product
+    public class ProductViewModel
     {
         public int Id { get; set; }
 
@@ -26,20 +27,14 @@ namespace Shooping.Data.Entities
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public float Stock { get; set; }
 
-        public ICollection<ProductCategory> ProductCategories { get; set; }
+        [Display(Name = "Categoría")]
+        [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar una categoría.")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        public int CategoryId { get; set; }
 
-        [Display(Name = "Categorías")]
-        public int CategoriesNumber => ProductCategories == null ? 0 : ProductCategories.Count;
+        public IEnumerable<SelectListItem> Categories { get; set; }
 
-        public ICollection<ProductImage> ProductImages { get; set; }
-
-        [Display(Name = "Fotos")]
-        public int ImagesNumber => ProductImages == null ? 0 : ProductImages.Count;
-
-        //TODO: Pending to change to the correct path
         [Display(Name = "Foto")]
-        public string ImageFullPath => ProductImages == null || ProductImages.Count == 0
-            ? $"https://vehicleszulu.azurewebsites.net/images/noimage.png"
-            : ProductImages.FirstOrDefault().ImageFullPath;
+        public IFormFile ImageFile { get; set; }
     }
 }

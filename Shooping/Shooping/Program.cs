@@ -14,6 +14,7 @@ builder.Services.AddDbContext<DataContext>(o =>
 builder.Services.AddTransient<SeedDb>();
 builder.Services.AddScoped<ICombosHelper, CombosHelper>();
 builder.Services.AddScoped<IBlobHelper, BlobHelper>();
+builder.Services.AddScoped<IConverterHelper, ConverterHelper>();
 
 
 WebApplication? app = builder.Build();
