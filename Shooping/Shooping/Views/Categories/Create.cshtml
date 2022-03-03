@@ -12,6 +12,7 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProductCategories"/>
             <partial name="_Category"/>
             <div class="form-group mt-2">
                 <input type="submit" value="Crear" class="btn btn-outline-primary" />

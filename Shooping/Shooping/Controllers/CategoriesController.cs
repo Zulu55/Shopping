@@ -24,7 +24,8 @@ namespace Shooping.Controllers
 
         public IActionResult Create()
         {
-            return View();
+            Category category = new() {  ProductCategories = new List<ProductCategory>() };
+            return View(category);
         }
 
         [HttpPost]
