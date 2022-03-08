@@ -1,41 +1,41 @@
 ﻿@model Shooping.Models.LoginViewModel
+
 @{
     ViewData["Title"] = "Login";
 }
 
-<h2>Login</h2>
 
 <div class="row">
-    <div class="col-md-4 offset-md-4">
-        <form method="post">
-            <div asp-validation-summary="ModelOnly"></div>
-            
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+        <h3>Iniciar Sesión</h3>
+        <form asp-action="Login">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Username"></label>
+                <label asp-for="Username" class="control-label"></label>
                 <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="text-warning"></span>
+                <span asp-validation-for="Username" class="text-danger"></span>
             </div>
-            <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-            
             <div class="form-group">
-                <label asp-for="Password"></label>
+                <label asp-for="Password" class="control-label"></label>
                 <input asp-for="Password" type="password" class="form-control" />
-                <span asp-validation-for="Password" class="text-warning"></span>
+                <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-            
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <div class="form-check">
                     <input asp-for="RememberMe" type="checkbox" class="form-check-input" />
-                    <label asp-for="RememberMe" class="form-check-label"/>
+                    <label asp-for="RememberMe" class="form-check-label"></label>
                 </div>
                 <span asp-validation-for="RememberMe" class="text-warning"></span>
             </div>
-            
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <input type="submit" value="Iniciar Sesión" class="btn btn-outline-primary" />
                 <a asp-action="Register" class="btn btn-outline-secondary">Registrar Nuevo Usuario</a>
             </div>
         </form>
+    </div>
+    <div class="col-md-4">
     </div>
 </div>
 
