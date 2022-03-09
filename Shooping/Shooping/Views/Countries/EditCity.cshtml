@@ -1,4 +1,4 @@
-﻿@model Shooping.Data.Entities.Country
+﻿@model Shooping.Models.CityViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -6,18 +6,18 @@
 
 <h1>Editar</h1>
 
-<h4>País</h4>
+<h4>Ciudad</h4>
 <hr />
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="Edit">
+        <form asp-action="EditCity">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="States" />
-            <partial name="_Country"/>            
+            <input type="hidden" asp-for="StateId" />
+            <partial name="_City"/>            
             <div class="form-group mt-2">
                 <input type="submit" value="Guardar" class="btn btn-outline-primary" />
-                <a asp-action="Index" class="btn btn-outline-success">Regresar</a>
+                <a asp-action="DetailsState" asp-route-id="@Model.StateId" class="btn btn-outline-success" >Regresar</a>
             </div>
         </form>
     </div>

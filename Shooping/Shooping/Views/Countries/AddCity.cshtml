@@ -1,0 +1,27 @@
+﻿@model Shooping.Models.CityViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Crear</h1>
+
+<h4>Ciudad</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="AddCity">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="StateId"/>
+            <partial name="_City"/>            
+            <div class="form-group mt-2">
+                <input type="submit" value="Crear" class="btn btn-outline-primary" />
+                <a asp-action="DetailsState" asp-route-id="@Model.StateId" class="btn btn-outline-success" >Regresar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
