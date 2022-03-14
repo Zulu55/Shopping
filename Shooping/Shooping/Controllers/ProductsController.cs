@@ -31,11 +31,11 @@ namespace Shooping.Controllers
                 .ToListAsync());
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             CreateProductViewModel model = new()
             {
-                Categories = _combosHelper.GetComboCategories(),
+                Categories = await _combosHelper.GetComboCategoriesAsync(),
             };
 
             return View(model);
@@ -279,7 +279,7 @@ namespace Shooping.Controllers
             AddCategoryProductViewModel model = new()
             {
                 ProductId = product.Id,
-                Categories = _combosHelper.GetComboCategories(),
+                Categories = await _combosHelper.GetComboCategoriesAsync(),
             };
 
             return View(model);
