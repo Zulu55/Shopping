@@ -21,5 +21,11 @@ namespace Shooping.Helpers
         Task LogoutAsync();
 
         Task<User> AddUserAsync(AddUserViewModel model, Guid imageId);
+
+        Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword);
+
+        Task<IdentityResult> UpdateUserAsync(User user);
+
+        Task<User> GetUserAsync(Guid userId);
     }
 }
