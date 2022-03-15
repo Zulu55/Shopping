@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shooping.Data;
 using Shooping.Data.Entities;
@@ -8,14 +9,15 @@ using Shooping.Models;
 
 namespace Shooping.Controllers
 {
-    public class AccountController : Controller
+    [Authorize(Roles = "Admin")]
+    public class UsersController : Controller
     {
         private readonly IUserHelper _userHelper;
         private readonly DataContext _context;
         private readonly ICombosHelper _combosHelper;
         private readonly IBlobHelper _blobHelper;
 
-        public AccountController(IUserHelper userHelper, DataContext context, ICombosHelper combosHelper, IBlobHelper blobHelper)
+        public UsersController(IUserHelper userHelper, DataContext context, ICombosHelper combosHelper, IBlobHelper blobHelper)
         {
             _userHelper = userHelper;
             _context = context;
@@ -23,7 +25,16 @@ namespace Shooping.Controllers
             _blobHelper = blobHelper;
         }
 
-        public async Task<IActionResult> Register()
+        public async Task<IActionResult> Index()
+        {
+            return View(await _context.Users
+                .Include(u => u.City)
+                .ThenInclude(c => c.State)
+                .ThenInclude(s => s.Country)
+                .ToListAsync());
+        }
+
+        public async Task<IActionResult> Create()
         {
             AddUserViewModel model = new AddUserViewModel
             {
@@ -31,7 +42,7 @@ namespace Shooping.Controllers
                 Countries = await _combosHelper.GetComboCountriesAsync(),
                 States = await _combosHelper.GetComboStatesAsync(0),
                 Cities = await _combosHelper.GetComboCitiesAsync(0),
-                UserType = UserType.User,
+                UserType = UserType.Admin,
             };
 
             return View(model);
@@ -39,7 +50,7 @@ namespace Shooping.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(AddUserViewModel model)
+        public async Task<IActionResult> Create(AddUserViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -57,19 +68,7 @@ namespace Shooping.Controllers
                     return View(model);
                 }
 
-                LoginViewModel loginViewModel = new LoginViewModel
-                {
-                    Password = model.Password,
-                    RememberMe = false,
-                    Username = model.Username
-                };
-
-                var result2 = await _userHelper.LoginAsync(loginViewModel);
-
-                if (result2.Succeeded)
-                {
-                    return RedirectToAction("Index", "Home");
-                }
+                return RedirectToAction(nameof(Index));
             }
 
             return View(model);
@@ -110,39 +109,6 @@ namespace Shooping.Controllers
             }
 
             return View(new LoginViewModel());
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                Microsoft.AspNetCore.Identity.SignInResult result = await _userHelper.LoginAsync(model);
-                if (result.Succeeded)
-                {
-                    if (Request.Query.Keys.Contains("ReturnUrl"))
-                    {
-                        return Redirect(Request.Query["ReturnUrl"].First());
-                    }
-
-                    return RedirectToAction("Index", "Home");
-                }
-
-                ModelState.AddModelError(string.Empty, "Email o contraseña incorrectos.");
-            }
-
-            return View(model);
-        }
-
-        public async Task<IActionResult> Logout()
-        {
-            await _userHelper.LogoutAsync();
-            return RedirectToAction("Index", "Home");
-        }
-
-        public IActionResult NotAuthorized()
-        {
-            return View();
         }
     }
 }

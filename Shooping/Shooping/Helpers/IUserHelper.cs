@@ -19,5 +19,7 @@ namespace Shooping.Helpers
         Task<SignInResult> LoginAsync(LoginViewModel model);
 
         Task LogoutAsync();
+
+        Task<User> AddUserAsync(AddUserViewModel model, Guid imageId);
     }
 }
