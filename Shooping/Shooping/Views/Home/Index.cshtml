@@ -1,8 +1,36 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<Shooping.Models.ProductsHomeViewModel>
+
+@{
+    ViewData["Title"] = "Index";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Productos</h1>
-    <p>Acá vamos a colocar nuestro catálogo de productos.</p>
-</div>
+@foreach (var item in Model)
+{
+    <div class="row">
+        @if (item.Product1 != null)
+        {
+            <div class="col-md-3">
+                <img src="@item.Product1.ImageFullPath" style="width:200px;" />
+            </div>
+        }
+        @if (item.Product2 != null)
+        {
+            <div class="col-md-3">
+                <img src="@item.Product2.ImageFullPath" style="width:200px;" />
+            </div>
+        }
+        @if (item.Product3 != null)
+        {
+            <div class="col-md-3">
+                <img src="@item.Product3.ImageFullPath" style="width:200px;" />
+            </div>
+        }
+        @if (item.Product4 != null)
+        {
+            <div class="col-md-3">
+                <img src="@item.Product4.ImageFullPath" style="width:200px;" />
+            </div>
+        }
+    </div>
+}
+
