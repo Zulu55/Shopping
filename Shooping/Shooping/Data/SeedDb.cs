@@ -2,6 +2,7 @@
 using Shooping.Data.Entities;
 using Shooping.Enums;
 using Shooping.Helpers;
+using System.Reflection;
 
 namespace Shooping.Data
 {
@@ -9,11 +10,13 @@ namespace Shooping.Data
     {
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
+        private readonly IBlobHelper _blobHelper;
 
-        public SeedDb(DataContext context, IUserHelper userHelper)
+        public SeedDb(DataContext context, IUserHelper userHelper, IBlobHelper blobHelper)
         {
             _context = context;
             _userHelper = userHelper;
+            _blobHelper = blobHelper;
         }
 
         public async Task SeedAsync()
@@ -24,69 +27,85 @@ namespace Shooping.Data
             await CheckProductsAsync();
             await CheckRolesAsync();
             await CheckUserAsync("1010", "Juan", "Zuluaga", "zulu@yopmail.com", "322 311 4620", "Calle Luna Calle Sol", UserType.Admin);
+            await CheckUserAsync("2020", "Ledys", "Bedoya", "ledys@yopmail.com", "322 311 4620", "Calle Luna Calle Sol", UserType.User);
         }
 
         private async Task CheckProductsAsync()
         {
             if (!_context.Products.Any())
             {
-                _context.Products.Add(new Product
+                await AddProductAsync("AirPods", 1300000M, 12F, "Tecnología", new List<string>() { "adidas_barracuda.png" });
+                //_context.Products.Add(new Product
+                //{
+                //    Description = "iPad",
+                //    Name = "iPad",
+                //    Price = 2500000M,
+                //    Stock = 6F,
+                //    ProductCategories = new List<ProductCategory>()
+                //    {
+                //        new ProductCategory { Category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "Tecnología") }
+                //    }
+                //});
+                //_context.Products.Add(new Product
+                //{
+                //    Description = "Mascarilla para la Cara",
+                //    Name = "Mascarilla para la Cara",
+                //    Price = 8000M,
+                //    Stock = 200F,
+                //    ProductCategories = new List<ProductCategory>()
+                //    {
+                //        new ProductCategory { Category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "Belleza") }
+                //    }
+                //});
+                //_context.Products.Add(new Product
+                //{
+                //    Description = "Camisa a Cuadros",
+                //    Name = "Camisa a Cuadros",
+                //    Price = 52000M,
+                //    Stock = 24F,
+                //    ProductCategories = new List<ProductCategory>()
+                //    {
+                //        new ProductCategory { Category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "Ropa") }
+                //    }
+                //});
+                //_context.Products.Add(new Product
+                //{
+                //    Description = "iPhone 13",
+                //    Name = "iPhone 13",
+                //    Price = 5200000M,
+                //    Stock = 8F,
+                //    ProductCategories = new List<ProductCategory>()
+                //    {
+                //        new ProductCategory { Category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "Tecnología") }
+                //    }
+                //});
+            }
+        }
+
+        private async Task AddProductAsync(string name, decimal price, float stock, string category, List<string> images)
+        {
+            Product prodcut = new()
+            {
+                Description = name,
+                Name = name,
+                Price = price,
+                Stock = stock,
+                ProductCategories = new List<ProductCategory>()
                 {
-                    Description = "AirPods",
-                    Name = "AirPods",
-                    Price = 1300000M,
-                    Stock = 12F,
-                    ProductCategories = new List<ProductCategory>()
-                    {
-                        new ProductCategory { Category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "Tecnología") }
-                    }
-                });
-                _context.Products.Add(new Product
-                {
-                    Description = "iPad",
-                    Name = "iPad",
-                    Price = 2500000M,
-                    Stock = 6F,
-                    ProductCategories = new List<ProductCategory>()
-                    {
-                        new ProductCategory { Category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "Tecnología") }
-                    }
-                });
-                _context.Products.Add(new Product
-                {
-                    Description = "Mascarilla para la Cara",
-                    Name = "Mascarilla para la Cara",
-                    Price = 8000M,
-                    Stock = 200F,
-                    ProductCategories = new List<ProductCategory>()
-                    {
-                        new ProductCategory { Category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "Belleza") }
-                    }
-                });
-                _context.Products.Add(new Product
-                {
-                    Description = "Camisa a Cuadros",
-                    Name = "Camisa a Cuadros",
-                    Price = 52000M,
-                    Stock = 24F,
-                    ProductCategories = new List<ProductCategory>()
-                    {
-                        new ProductCategory { Category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "Ropa") }
-                    }
-                });
-                _context.Products.Add(new Product
-                {
-                    Description = "iPhone 13",
-                    Name = "iPhone 13",
-                    Price = 5200000M,
-                    Stock = 8F,
-                    ProductCategories = new List<ProductCategory>()
-                    {
-                        new ProductCategory { Category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == "Tecnología") }
-                    }
-                });
+                    new ProductCategory { Category = await _context.Categories.FirstOrDefaultAsync(c => c.Name == category) }
+                },
+                ProductImages = new List<ProductImage>()
+            };
+
+            var e = Environment.CurrentDirectory;
+
+            foreach (string? image in images)
+            {
+                Guid imageId = await _blobHelper.UploadBlobAsync($"{Environment.CurrentDirectory}\\wwwroot\\images\\products\\{image}", "products");
+                prodcut.ProductImages.Add(new ProductImage { ImageId = imageId });
             }
 
+            _context.Products.Add(prodcut);
             await _context.SaveChangesAsync();
         }
 
@@ -177,7 +196,7 @@ namespace Shooping.Data
                             }
                         },
                     }
-                    });
+                });
                 _context.Countries.Add(new Country
                 {
                     Name = "Estados Unidos",
