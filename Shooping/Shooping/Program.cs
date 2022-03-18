@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Shooping.Data;
 using Shooping.Data.Entities;
 using Shooping.Helpers;
+using Vereyon.Web;
 
 WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,7 @@ builder.Services.AddScoped<ICombosHelper, CombosHelper>();
 builder.Services.AddScoped<IBlobHelper, BlobHelper>();
 builder.Services.AddScoped<IUserHelper, UserHelper>();
 builder.Services.AddScoped<IMailHelper, MailHelper>();
+builder.Services.AddFlashMessage();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 WebApplication? app = builder.Build();
