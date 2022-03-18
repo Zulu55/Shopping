@@ -160,7 +160,11 @@ namespace Shooping.Data
                                 new City() { Name = "Itagüí" },
                                 new City() { Name = "Envigado" },
                                 new City() { Name = "Bello" },
-                                new City() { Name = "Rionegro" },
+                                new City() { Name = "Sabaneta" },
+                                new City() { Name = "La Ceja" },
+                                new City() { Name = "La Union" },
+                                new City() { Name = "La Estrella" },
+                                new City() { Name = "Copacabana" },
                             }
                         },
                         new State()
@@ -170,8 +174,34 @@ namespace Shooping.Data
                                 new City() { Name = "Usaquen" },
                                 new City() { Name = "Champinero" },
                                 new City() { Name = "Santa fe" },
-                                new City() { Name = "Useme" },
+                                new City() { Name = "Usme" },
                                 new City() { Name = "Bosa" },
+                            }
+                        },
+                        new State()
+                        {
+                            Name = "Valle",
+                            Cities = new List<City>() {
+                                new City() { Name = "Calí" },
+                                new City() { Name = "Jumbo" },
+                                new City() { Name = "Jamundí" },
+                                new City() { Name = "Chipichape" },
+                                new City() { Name = "Buenaventura" },
+                                new City() { Name = "Cartago" },
+                                new City() { Name = "Buga" },
+                                new City() { Name = "Palmira" },
+                            }
+                        },
+                        new State()
+                        {
+                            Name = "Santander",
+                            Cities = new List<City>() {
+                                new City() { Name = "Bucaramanga" },
+                                new City() { Name = "Málaga" },
+                                new City() { Name = "Barrancabermeja" },
+                                new City() { Name = "Rionegro" },
+                                new City() { Name = "Barichara" },
+                                new City() { Name = "Zapatoca" },
                             }
                         },
                     }
@@ -201,6 +231,39 @@ namespace Shooping.Data
                                 new City() { Name = "Dallas" },
                                 new City() { Name = "Austin" },
                                 new City() { Name = "El Paso" },
+                            }
+                        },
+                        new State()
+                        {
+                            Name = "California",
+                            Cities = new List<City>() {
+                                new City() { Name = "Los Angeles" },
+                                new City() { Name = "San Francisco" },
+                                new City() { Name = "San Diego" },
+                                new City() { Name = "San Bruno" },
+                                new City() { Name = "Sacramento" },
+                                new City() { Name = "Fresno" },
+                            }
+                        },
+                    }
+                });
+                _context.Countries.Add(new Country
+                {
+                    Name = "Ecuador",
+                    States = new List<State>()
+                    {
+                        new State()
+                        {
+                            Name = "Pichincha",
+                            Cities = new List<City>() {
+                                new City() { Name = "Quito" },
+                            }
+                        },
+                        new State()
+                        {
+                            Name = "Esmeraldas",
+                            Cities = new List<City>() {
+                                new City() { Name = "Esmeraldas" },
                             }
                         },
                     }
