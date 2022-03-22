@@ -39,7 +39,7 @@
                         <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
                     </div>
                 </div>
-            </div>    
+            </div>
 
             <partial name="_User" />
 
@@ -57,56 +57,58 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#CountryId").change(function () {
-                debugger;
-                $("#StateId").empty();
-                $("#StateId").append('<option value="0">[Selecciona un Departamento / Estado...]</option>');
-                $("#CityId").empty();
-                $("#CityId").append('<option value="0">[Selecciona una ciudad...]</option>');
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("GetStates")',
-                    dataType: 'json',
-                    data: { countryId: $("#CountryId").val() },
-                    success: function (states) {
-                        $.each(states, function (i, state) {
-                            $("#StateId").append('<option value="'
-                                + state.id + '">'
-                                + state.name + '</option>');
-                        });
-                    },
-                    error: function (ex) {
-                        alert('Failed to retrieve states.' + ex);
-                    }
-                });
-                return false;
-            })
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#CountryId").change(function () {
+            debugger;
+            $("#StateId").empty();
+            $("#StateId").append('<option value="0">[Selecciona un Departamento / Estado...]</option>');
+            $("#CityId").empty();
+            $("#CityId").append('<option value="0">[Selecciona una ciudad...]</option>');
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetStates")',
+                dataType: 'json',
+                data: { countryId: $("#CountryId").val() },
+                success: function (states) {
+                    $.each(states, function (i, state) {
+                        $("#StateId").append('<option value="'
+                            + state.id + '">'
+                            + state.name + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve states.' + ex);
+                }
+            });
+            return false;
+        })
 
-            $("#StateId").change(function () {
-                $("#CityId").empty();
-                $("#CityId").append('<option value="0">[Selecciona una ciudad...]</option>');
-                $.ajax({
-                    type: 'POST',
-                    url: '@Url.Action("GetCities")',
-                    dataType: 'json',
-                    data: { stateId: $("#StateId").val() },
-                    success: function (cities) {
-                        $.each(cities, function (i, city) {
-                            debugger;
-                            $("#CityId").append('<option value="'
-                                + city.id + '">'
-                                + city.name + '</option>');
-                        });
-                    },
-                    error: function (ex) {
-                        alert('Failed to retrieve cities.' + ex);
-                    }
-                });
-                return false;
-            })
-        });
-    </script>
+        $("#StateId").change(function () {
+            $("#CityId").empty();
+            $("#CityId").append('<option value="0">[Selecciona una ciudad...]</option>');
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetCities")',
+                dataType: 'json',
+                data: { stateId: $("#StateId").val() },
+                success: function (cities) {
+                    $.each(cities, function (i, city) {
+                        debugger;
+                        $("#CityId").append('<option value="'
+                            + city.id + '">'
+                            + city.name + '</option>');
+                    });
+                },
+                error: function (ex) {
+                    alert('Failed to retrieve cities.' + ex);
+                }
+            });
+            return false;
+        })
+    });
+</script>
 }
