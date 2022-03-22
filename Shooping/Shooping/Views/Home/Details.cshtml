@@ -53,6 +53,12 @@
             <dd class="col-sm-8">
                 @Html.DisplayFor(model => model.Stock)
             </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Categories)
+            </dt>
+            <dd class="col-sm-8">
+                @Html.DisplayFor(model => model.Categories)
+            </dd>
             <div class="col-md-12">
                 <form asp-action="Details">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>

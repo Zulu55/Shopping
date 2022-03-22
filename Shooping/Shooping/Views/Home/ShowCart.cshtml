@@ -1,0 +1,136 @@
+﻿@model Shooping.Models.ShowCartViewModel
+
+@{
+    ViewData["Title"] = "Cart";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
+
+<div class="row">
+    <div class="col-md-4">
+        <dl class="row">
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Quantity)
+            </dt>
+            <dd class="col-sm-8">
+                <h3>@Html.DisplayFor(model => model.Quantity)</h3>
+            </dd>
+            <dt class="col-sm-4">
+                @Html.DisplayNameFor(model => model.Value)
+            </dt>
+            <dd class="col-sm-8">
+                <h3>@Html.DisplayFor(model => model.Value)</h3>
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-8">
+            <div class="col-md-12">
+                <form asp-action="ShowCart">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="Remarks" class="control-label"></label>
+                        <input asp-for="Remarks" class="form-control" />
+                        <span asp-validation-for="Remarks" class="text-danger"></span>
+                    </div>
+                    <div class="form-group mt-2">
+                        <input type="submit" value="Confirmar Pedido" class="btn btn-outline-primary" />
+                        <a asp-action="Index" class="btn btn-outline-success">Regresar</a>
+                    </div>
+                </form>
+            </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Carro de Compras</h3>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover table-responsive table-striped" id="MyTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TemporalSales.FirstOrDefault().Product.ImageFullPath)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TemporalSales.FirstOrDefault().Product.Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TemporalSales.FirstOrDefault().Remarks)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TemporalSales.FirstOrDefault().Product.Price)
+                            </th>
+                            <th></th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TemporalSales.FirstOrDefault().Quantity)
+                            </th>
+                            <th></th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TemporalSales.FirstOrDefault().Value)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.TemporalSales)
+                        {
+                            <tr>
+                                <td>
+                                    <img src="@item.Product.ImageFullPath" style="width:100px;" />
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Product.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Remarks)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Product.Price)
+                                </td>
+                                <td>
+                                    <a asp-action="DecreaseQuantity" asp-route-id="@item.Id" class="btn btn-secondary">-</a>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Quantity)
+                                </td>
+                                <td>
+                                    <a asp-action="IncreaseQuantity" asp-route-id="@item.Id" class="btn btn-primary">+</a>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Value)
+                                </td>
+                                <td>
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning">Editar</a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Borrar</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#MyTable').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                },
+                "aLengthMenu": [
+                    [25, 50, 100, 200, -1],
+                    [25, 50, 100, 200, "Todos"]
+                ]
+            });
+        });
+    </script>
+}
