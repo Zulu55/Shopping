@@ -1,6 +1,7 @@
 ﻿using Shooping.Common;
 using Shooping.Data;
 using Shooping.Data.Entities;
+using Shooping.Enums;
 using Shooping.Models;
 
 namespace Shooping.Helpers
@@ -27,7 +28,8 @@ namespace Shooping.Helpers
                 Date = DateTime.UtcNow,
                 User = model.User,
                 Remarks = model.Remarks,
-                SaleDetails = new List<SaleDetail>()
+                SaleDetails = new List<SaleDetail>(),
+                OrderStatus = OrderStatus.New
             };
 
             foreach (TemporalSale? item in model.TemporalSales)

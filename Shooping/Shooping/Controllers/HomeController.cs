@@ -30,6 +30,7 @@ namespace Shooping.Controllers
             List<Product>? products = await _context.Products
                 .Include(p => p.ProductImages)
                 .Include(p => p.ProductCategories)
+                .Where(p => p.Stock > 0)
                 .OrderBy(p => p.Description)
                 .ToListAsync();
             List<ProductsHomeViewModel> productsHome = new() { new ProductsHomeViewModel() };
@@ -226,17 +227,26 @@ namespace Shooping.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ShowCart(ShowCartViewModel model)
         {
-            if (ModelState.IsValid)
+            User user = await _userHelper.GetUserAsync(User.Identity.Name);
+            if (user == null)
             {
-                Response response = await _ordersHelper.ProcessOrderAsync(model);
-                if (response.IsSuccess)
-                {
-                    return RedirectToAction(nameof(OrderSuccess));
-                }
-
-                ModelState.AddModelError(string.Empty, response.Message);
+                return NotFound();
             }
 
+            model.User = user;
+            model.TemporalSales = await _context.TemporalSales
+                .Include(ts => ts.Product)
+                .ThenInclude(p => p.ProductImages)
+                .Where(ts => ts.User.Id == user.Id)
+                .ToListAsync();
+
+            Response response = await _ordersHelper.ProcessOrderAsync(model);
+            if (response.IsSuccess)
+            {
+                return RedirectToAction(nameof(OrderSuccess));
+            }
+
+            ModelState.AddModelError(string.Empty, response.Message);
             return View(model);
         }
 

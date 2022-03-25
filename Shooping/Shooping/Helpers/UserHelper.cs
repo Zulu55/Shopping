@@ -27,7 +27,7 @@ namespace Shooping.Helpers
                 model.Username,
                 model.Password,
                 model.RememberMe,
-                false);
+                true);
         }
 
         public async Task LogoutAsync()

@@ -50,6 +50,9 @@
                                 @Html.DisplayNameFor(model => model.UserType)
                             </th>
                             <th>
+                                @Html.DisplayNameFor(model => model.EmailConfirmed)
+                            </th>
+                            <th>
                                 @Html.DisplayNameFor(model => model.ImageFullPath)
                             </th>
                         </tr>
@@ -87,6 +90,9 @@
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.UserType)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.EmailConfirmed)
                                 </td>
                                 <td>
                                     <img src="@item.ImageFullPath" style="width:100px; height:100px; border-radius:50px" />
