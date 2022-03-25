@@ -48,5 +48,7 @@ namespace Shooping.Data.Entities
         public string FullNameWithDocument => $"{FirstName} {LastName} - {Document}";
 
         public ICollection<TemporalSale> TemporalSales { get; set; }
+
+        public ICollection<Sale> Sales { get; set; }
     }
 }

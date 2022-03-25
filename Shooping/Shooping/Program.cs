@@ -39,6 +39,7 @@ builder.Services.AddScoped<ICombosHelper, CombosHelper>();
 builder.Services.AddScoped<IBlobHelper, BlobHelper>();
 builder.Services.AddScoped<IUserHelper, UserHelper>();
 builder.Services.AddScoped<IMailHelper, MailHelper>();
+builder.Services.AddScoped<IOrdersHelper, OrdersHelper>();
 builder.Services.AddFlashMessage();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 

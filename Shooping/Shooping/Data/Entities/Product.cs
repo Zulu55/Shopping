@@ -43,5 +43,7 @@ namespace Shooping.Data.Entities
             : ProductImages.FirstOrDefault().ImageFullPath;
 
         public ICollection<TemporalSale> TemporalSales { get; set; }
+
+        public ICollection<SaleDetail> SaleDetails { get; set; }
     }
 }

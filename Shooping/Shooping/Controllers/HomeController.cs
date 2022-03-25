@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Shooping.Common;
 using Shooping.Data;
 using Shooping.Data.Entities;
 using Shooping.Helpers;
@@ -14,12 +15,14 @@ namespace Shooping.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
+        private readonly IOrdersHelper _ordersHelper;
 
-        public HomeController(ILogger<HomeController> logger, DataContext context, IUserHelper userHelper)
+        public HomeController(ILogger<HomeController> logger, DataContext context, IUserHelper userHelper, IOrdersHelper ordersHelper)
         {
             _logger = logger;
             _context = context;
             _userHelper = userHelper;
+            _ordersHelper = ordersHelper;
         }
 
         public async Task<IActionResult> Index()
@@ -211,11 +214,36 @@ namespace Shooping.Controllers
 
             ShowCartViewModel model = new()
             {
+                Remarks = "Sin comentarios",
                 User = user,
                 TemporalSales = temporalSales,
             };
 
             return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ShowCart(ShowCartViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                Response response = await _ordersHelper.ProcessOrderAsync(model);
+                if (response.IsSuccess)
+                {
+                    return RedirectToAction(nameof(OrderSuccess));
+                }
+
+                ModelState.AddModelError(string.Empty, response.Message);
+            }
+
+            return View(model);
+        }
+
+        [Authorize]
+        public IActionResult OrderSuccess()
+        {
+            return View();
         }
 
         public async Task<IActionResult> DecreaseQuantity(int? id)

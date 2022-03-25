@@ -9,6 +9,7 @@ namespace Shooping.Models
 
         [DataType(DataType.MultilineText)]
         [Display(Name = "Comentarios")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string Remarks { get; set; }
 
         public ICollection<TemporalSale> TemporalSales { get; set; }
