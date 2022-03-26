@@ -98,7 +98,6 @@ namespace Shooping.Controllers
             {
                 Product = product,
                 Quantity = 1,
-                Remarks = "Sin comentarios",
                 User = user
             };
 
@@ -158,7 +157,6 @@ namespace Shooping.Controllers
                 ProductImages = product.ProductImages,
                 Quantity = 1,
                 Stock = product.Stock,
-                Remarks = "Sin comentarios"
             };
 
             return View(model);
@@ -215,7 +213,6 @@ namespace Shooping.Controllers
 
             ShowCartViewModel model = new()
             {
-                Remarks = "Sin comentarios",
                 User = user,
                 TemporalSales = temporalSales,
             };
