@@ -29,7 +29,7 @@ namespace Shooping.Helpers
                 User = model.User,
                 Remarks = model.Remarks,
                 SaleDetails = new List<SaleDetail>(),
-                OrderStatus = OrderStatus.New
+                OrderStatus = OrderStatus.Nuevo
             };
 
             foreach (TemporalSale? item in model.TemporalSales)
@@ -51,6 +51,7 @@ namespace Shooping.Helpers
                 _context.TemporalSales.Remove(item);
             }
 
+            _context.Sales.Add(sale);
             await _context.SaveChangesAsync();
             return response;
         }

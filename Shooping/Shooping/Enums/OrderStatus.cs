@@ -2,10 +2,10 @@
 {
     public enum OrderStatus
     {
-        New,
-        Dispatching,
-        Sent,
-        Confirmed,
-        Canceled
+        Nuevo,
+        Despachado,
+        Enviado,
+        Confirmado,
+        Cancelado
     }
 }

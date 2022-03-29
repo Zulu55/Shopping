@@ -8,7 +8,7 @@ namespace Shooping.Data.Entities
         public int Id { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd hh:mm tt}")]
-        [Display(Name = "Inventario")]
+        [Display(Name = "Fecha")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public DateTime Date { get; set; }
 
@@ -18,6 +18,7 @@ namespace Shooping.Data.Entities
         [Display(Name = "Comentarios")]
         public string? Remarks { get; set; }
 
+        [Display(Name = "Estado")]
         public OrderStatus OrderStatus { get; set; }
 
         public ICollection<SaleDetail> SaleDetails { get; set; }
