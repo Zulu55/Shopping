@@ -13,7 +13,7 @@ namespace Shooping.Helpers
             _context = context;
         }
 
-        public async Task<IEnumerable<SelectListItem>> GetComboCategoriesAsync()
+        public async Task<IEnumerable<SelectListItem>> GetComboCategoriesAsync(bool withAll = false)
         {
             List<SelectListItem> list = await _context.Categories.Select(x => new SelectListItem
             {
@@ -25,7 +25,7 @@ namespace Shooping.Helpers
 
             list.Insert(0, new SelectListItem
             {
-                Text = "[Seleccione una categoría...]",
+                Text = withAll ? "[Todas las categorías...]" : "[Seleccione una categoría...]",
                 Value = "0"
             });
 

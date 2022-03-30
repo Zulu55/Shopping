@@ -4,10 +4,24 @@
     ViewData["Title"] = "Index";
 }
 
-@if(Model.Quantity > 0)
+@if (Model.Quantity > 0)
 {
     <a asp-action="ShowCart" class="btn btn-outline-primary">Ver Carro de Compras (@Model.Quantity)</a>
 }
+
+<form asp-action="Index">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <div class="row">
+            <div class="col-md-10 mt-2 mb-2">
+                <select asp-for="CategoryId" asp-items="Model.Categories" class="form-control"></select>
+            </div>
+            <div class="col-md-1 mt-2 mb-2">
+                <input type="submit" value="Filtrar Por Categoría" class="btn btn-block btn-outline-primary" />
+            </div>
+        </div>
+    </div>
+</form>
 
 @foreach (var item in Model.Products)
 {

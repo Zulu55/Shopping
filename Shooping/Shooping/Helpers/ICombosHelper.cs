@@ -4,7 +4,7 @@ namespace Shooping.Helpers
 {
     public interface ICombosHelper
     {
-        Task<IEnumerable<SelectListItem>> GetComboCategoriesAsync();
+        Task<IEnumerable<SelectListItem>> GetComboCategoriesAsync(bool withAll = false);
 
         Task<IEnumerable<SelectListItem>> GetComboCountriesAsync();
 

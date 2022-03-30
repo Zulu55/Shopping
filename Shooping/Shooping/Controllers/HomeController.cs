@@ -16,23 +16,41 @@ namespace Shooping.Controllers
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
         private readonly IOrdersHelper _ordersHelper;
+        private readonly ICombosHelper _combosHelper;
 
-        public HomeController(ILogger<HomeController> logger, DataContext context, IUserHelper userHelper, IOrdersHelper ordersHelper)
+        public HomeController(ILogger<HomeController> logger, DataContext context, IUserHelper userHelper, IOrdersHelper ordersHelper, ICombosHelper combosHelper)
         {
             _logger = logger;
             _context = context;
             _userHelper = userHelper;
             _ordersHelper = ordersHelper;
+            _combosHelper = combosHelper;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        [HttpPost]
+        public async Task<IActionResult> Index(HomeViewModel? model)
         {
-            List<Product>? products = await _context.Products
-                .Include(p => p.ProductImages)
-                .Include(p => p.ProductCategories)
-                .Where(p => p.Stock > 0)
-                .OrderBy(p => p.Description)
-                .ToListAsync();
+            List<Product>? products;
+            if (model.CategoryId == 0)
+            {
+                products = await _context.Products
+                    .Include(p => p.ProductImages)
+                    .Include(p => p.ProductCategories)
+                    .Where(p => p.Stock > 0)
+                    .OrderBy(p => p.Description)
+                    .ToListAsync();
+            }
+            else 
+            {
+                products = await _context.Products
+                    .Include(p => p.ProductImages)
+                    .Include(p => p.ProductCategories)
+                    .Where(p => p.Stock > 0 && p.ProductCategories.Any(pc => pc.Category.Id == model.CategoryId))
+                    .OrderBy(p => p.Description)
+                    .ToListAsync();
+            }
+
             List<ProductsHomeViewModel> productsHome = new() { new ProductsHomeViewModel() };
             int i = 1;
             foreach (Product? product in products)
@@ -58,7 +76,9 @@ namespace Shooping.Controllers
                 i++;
             }
 
-            HomeViewModel model = new() { Products = productsHome };
+            model.Products = productsHome;
+            model.Categories = await _combosHelper.GetComboCategoriesAsync(true);
+
             User user = await _userHelper.GetUserAsync(User.Identity.Name);
             if (user != null)
             {
@@ -69,6 +89,7 @@ namespace Shooping.Controllers
 
             return View(model);
         }
+
 
         public async Task<IActionResult> Add(int? id)
         {
