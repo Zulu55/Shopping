@@ -6,6 +6,7 @@ using Shooping.Data.Entities;
 using Shooping.Enums;
 using Shooping.Helpers;
 using Shooping.Models;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Shooping.Controllers
 {
@@ -39,13 +40,20 @@ namespace Shooping.Controllers
         {
             if (ModelState.IsValid)
             {
-                Microsoft.AspNetCore.Identity.SignInResult result = await _userHelper.LoginAsync(model);
+                SignInResult result = await _userHelper.LoginAsync(model);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "Home");
                 }
 
-                ModelState.AddModelError(string.Empty, "Email o contraseña incorrectos.");
+                if (result.IsLockedOut)
+                {
+                    ModelState.AddModelError(string.Empty, "Ha superado el máximo número de intentos, su cuenta está bloqueada, intente de nuevo en 5 minutos.");
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Email o contraseña incorrectos.");
+                }
             }
 
             return View(model);
