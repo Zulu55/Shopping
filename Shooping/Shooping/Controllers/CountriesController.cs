@@ -162,7 +162,7 @@ namespace Shooping.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe un departamento/estado con el mismo nombre en este país.");
+                        ModelState.AddModelError(string.Empty, "Ya existe un Departamento / Estado con el mismo nombre en este país.");
                     }
                     else
                     {
@@ -220,7 +220,7 @@ namespace Shooping.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe una ciudad con el mismo nombre en este departamento/estado.");
+                        ModelState.AddModelError(string.Empty, "Ya existe una ciudad con el mismo nombre en este Departamento / Estado.");
                     }
                     else
                     {
@@ -342,7 +342,7 @@ namespace Shooping.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe un departamento/estado con el mismo nombre en este país.");
+                        ModelState.AddModelError(string.Empty, "Ya existe un Departamento / Estado con el mismo nombre en este país.");
                     }
                     else
                     {
@@ -409,7 +409,7 @@ namespace Shooping.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        ModelState.AddModelError(string.Empty, "Ya existe una ciuad con el mismo nombre en este departamento/estado.");
+                        ModelState.AddModelError(string.Empty, "Ya existe una ciuad con el mismo nombre en este Departamento / Estado.");
                     }
                     else
                     {

@@ -69,7 +69,7 @@ namespace Shooping.Helpers
                 .OrderBy(c => c.Text)
                 .ToListAsync();
 
-            list.Insert(0, new SelectListItem { Text = "[Seleccione un departamento/estado...", Value = "0" });
+            list.Insert(0, new SelectListItem { Text = "[Seleccione un Departamento / Estado...", Value = "0" });
             return list;
         }
     }
