@@ -44,7 +44,7 @@
                                     <img src="@item.ImageFullPath" style="width:150px;" />
                                 </td>
                                 <td>
-                                    <a asp-action="DeleteImage" asp-route-id="@item.Id" class="btn btn-outline-danger">Borrar</a>
+                                    <a asp-action="DeleteImage" asp-route-id="@item.Id" class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></a>
                                 </td>
                             </tr>
                         }
@@ -76,7 +76,7 @@
                                     @Html.DisplayFor(modelItem => item.Category.Name)
                                 </td>
                                 <td>
-                                    <a asp-action="DeleteCategory" asp-route-id="@item.Id" class="btn btn-outline-danger">Borrar</a>
+                                    <a asp-action="DeleteCategory" asp-route-id="@item.Id" class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></a>
                                 </td>
                             </tr>
                         }
