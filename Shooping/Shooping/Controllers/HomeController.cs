@@ -27,28 +27,29 @@ namespace Shooping.Controllers
             _combosHelper = combosHelper;
         }
 
-        [HttpGet]
-        [HttpPost]
-        public async Task<IActionResult> Index(HomeViewModel? model)
-        {
-            List<Product>? products;
-            if (model.CategoryId == 0)
+            [HttpGet]
+            [HttpPost]
+            public async Task<IActionResult> Index(HomeViewModel? model)
             {
-                products = await _context.Products
+            List<Product>? products = await _context.Products
                     .Include(p => p.ProductImages)
                     .Include(p => p.ProductCategories)
                     .Where(p => p.Stock > 0)
                     .OrderBy(p => p.Description)
                     .ToListAsync();
-            }
-            else 
+
+            if (model.CategoryId != 0)
             {
-                products = await _context.Products
-                    .Include(p => p.ProductImages)
-                    .Include(p => p.ProductCategories)
-                    .Where(p => p.Stock > 0 && p.ProductCategories.Any(pc => pc.Category.Id == model.CategoryId))
-                    .OrderBy(p => p.Description)
-                    .ToListAsync();
+                products = products
+                    .Where(p => p.ProductCategories.Any(pc => pc.Category.Id == model.CategoryId))
+                    .ToList();
+            }
+
+            if (!string.IsNullOrEmpty(model.FilterName))
+            {
+                products = products
+                    .Where(p => p.Name.ToLower().Contains(model.FilterName.ToLower()))
+                    .ToList();
             }
 
             List<ProductsHomeViewModel> productsHome = new() { new ProductsHomeViewModel() };

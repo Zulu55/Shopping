@@ -13,11 +13,20 @@
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <div class="form-group">
         <div class="row">
-            <div class="col-md-10 mt-2 mb-2">
+            <div class="col-md-1 mt-2 mb-2">
+                <label asp-for="FilterName" class="control-label"></label>
+            </div>
+            <div class="col-md-4 mt-2 mb-2">
+                <input asp-for="FilterName" class="form-control" />
+            </div>
+            <div class="col-md-1 mt-2 mb-2">
+                <label asp-for="CategoryId" class="control-label"></label>
+            </div>
+            <div class="col-md-5 mt-2 mb-2">
                 <select asp-for="CategoryId" asp-items="Model.Categories" class="form-control"></select>
             </div>
             <div class="col-md-1 mt-2 mb-2">
-                <input type="submit" value="Filtrar Por Categoría" class="btn btn-block btn-outline-primary" />
+                <input type="submit" value="Filtrar" class="btn btn-block btn-outline-primary" />
             </div>
         </div>
     </div>

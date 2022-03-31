@@ -13,5 +13,8 @@ namespace Shooping.Models
         public int CategoryId { get; set; }
 
         public IEnumerable<SelectListItem> Categories { get; set; }
+
+        [Display(Name = "Filtrar por Nombre")]
+        public string FilterName { get; set; }
     }
 }
