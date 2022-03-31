@@ -34,6 +34,7 @@ namespace Shooping.Controllers
             List<Product>? products = await _context.Products
                     .Include(p => p.ProductImages)
                     .Include(p => p.ProductCategories)
+                    .ThenInclude(pc => pc.Category)
                     .Where(p => p.Stock > 0)
                     .OrderBy(p => p.Description)
                     .ToListAsync();
