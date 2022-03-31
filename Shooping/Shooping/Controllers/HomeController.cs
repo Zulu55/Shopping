@@ -25,34 +25,14 @@ namespace Shooping.Controllers
             _userHelper = userHelper;
             _ordersHelper = ordersHelper;
             _combosHelper = combosHelper;
+            Pager.RecordsPerPage = 8;
         }
 
-            [HttpGet]
-            [HttpPost]
-            public async Task<IActionResult> Index(HomeViewModel? model)
-            {
-            List<Product>? products = await _context.Products
-                    .Include(p => p.ProductImages)
-                    .Include(p => p.ProductCategories)
-                    .ThenInclude(pc => pc.Category)
-                    .Where(p => p.Stock > 0)
-                    .OrderBy(p => p.Description)
-                    .ToListAsync();
-
-            if (model.CategoryId != 0)
-            {
-                products = products
-                    .Where(p => p.ProductCategories.Any(pc => pc.Category.Id == model.CategoryId))
-                    .ToList();
-            }
-
-            if (!string.IsNullOrEmpty(model.FilterName))
-            {
-                products = products
-                    .Where(p => p.Name.ToLower().Contains(model.FilterName.ToLower()))
-                    .ToList();
-            }
-
+        [HttpGet]
+        [HttpPost]
+        public async Task<IActionResult> Index(HomeViewModel? model)
+        {
+            List<Product> products = await GetProductsAsync(model);
             List<ProductsHomeViewModel> productsHome = new() { new ProductsHomeViewModel() };
             int i = 1;
             foreach (Product? product in products)
@@ -92,6 +72,77 @@ namespace Shooping.Controllers
             return View(model);
         }
 
+        private async Task<List<Product>> GetProductsAsync(HomeViewModel model)
+        {
+            List<Product> products;
+
+            if (model.CategoryId != 0)
+            {
+                if (!string.IsNullOrEmpty(model.FilterName))
+                {
+                    products = await _context.Products
+                            .Include(p => p.ProductImages)
+                            .Include(p => p.ProductCategories)
+                            .ThenInclude(pc => pc.Category)
+                            .Where(p => p.Stock > 0 &&
+                                        p.ProductCategories.Any(pc => pc.Category.Id == model.CategoryId) &&
+                                        p.Name.ToLower().Contains(model.FilterName.ToLower()))
+                            .OrderBy(p => p.Description)
+                            .Take(Pager.RecordsPerPage)
+                            .Skip(Pager.RecordsPerPage * Pager.Page)
+                            .ToListAsync();
+                }
+                else
+                {
+                    products = await _context.Products
+                            .Include(p => p.ProductImages)
+                            .Include(p => p.ProductCategories)
+                            .ThenInclude(pc => pc.Category)
+                            .Where(p => p.Stock > 0 &&
+                                        p.ProductCategories.Any(pc => pc.Category.Id == model.CategoryId))
+                            .OrderBy(p => p.Description)
+                            .Take(Pager.RecordsPerPage)
+                            .Skip(Pager.RecordsPerPage * Pager.Page)
+                            .ToListAsync();
+                }
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(model.FilterName))
+                {
+                    products = await _context.Products
+                            .Include(p => p.ProductImages)
+                            .Include(p => p.ProductCategories)
+                            .ThenInclude(pc => pc.Category)
+                            .Where(p => p.Stock > 0 &&
+                                        p.Name.ToLower().Contains(model.FilterName.ToLower()))
+                            .OrderBy(p => p.Description)
+                            .Take(Pager.RecordsPerPage)
+                            .Skip(Pager.RecordsPerPage * Pager.Page)
+                            .ToListAsync();
+                }
+                else
+                {
+                    products = await _context.Products
+                            .Include(p => p.ProductImages)
+                            .Include(p => p.ProductCategories)
+                            .ThenInclude(pc => pc.Category)
+                            .Where(p => p.Stock > 0)
+                            .OrderBy(p => p.Description)
+                            .Take(Pager.RecordsPerPage)
+                            .Skip(Pager.RecordsPerPage * Pager.Page)
+                            .ToListAsync();
+                }
+            }
+
+            return products;
+        }
+
+        public IActionResult Next()
+        {
+            Pager.Page++;
+            return RedirectToAction(nameof(Index));
+        }
 
         public async Task<IActionResult> Add(int? id)
         {
