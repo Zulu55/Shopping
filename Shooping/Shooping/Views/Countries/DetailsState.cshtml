@@ -41,9 +41,9 @@
                                     @Html.DisplayFor(modelItem => item.Name)
                                 </td>
                                 <td>
-                                    <a asp-action="EditCity" asp-route-id="@item.Id" class="btn btn-outline-warning">Editar</a>
-                                    <a asp-action="DetailsCity" asp-route-id="@item.Id" class="btn btn-outline-info">Detalles</a>
-                                    <a asp-action="DeleteCity" asp-route-id="@item.Id" class="btn btn-outline-danger">Borrar</a>
+                                    <a asp-action="EditCity" asp-route-id="@item.Id" class="btn btn-outline-warning"><i class="fa-solid fa-pen-to-square"></i></a>
+                                    <a asp-action="DetailsCity" asp-route-id="@item.Id" class="btn btn-outline-info"><i class="fa-solid fa-circle-info"></i></a>
+                                    <a asp-action="DeleteCity" asp-route-id="@item.Id" class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></a>
                                 </td>
                             </tr>
                         }
