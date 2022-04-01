@@ -89,7 +89,7 @@ namespace Shooping.Controllers
                     model.Username,
                     "Shopping - Confirmación de Email",
                     $"<h1>Shopping - Confirmación de Email</h1>" +
-                        $"Para habilitar el usuario por favor hacer clicn en el siguiente link:, " +
+                        $"Para habilitar el usuario por favor hacer click en el siguiente link:, " +
                         $"<p><a href = \"{tokenLink}\">Confirmar Email</a></p>");
                 if (response.IsSuccess)
                 {
