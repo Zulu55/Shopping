@@ -8,6 +8,7 @@ using Shooping.Enums;
 using Shooping.Helpers;
 using Shooping.Models;
 using Vereyon.Web;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace Shooping.Controllers
 {
@@ -159,7 +160,7 @@ namespace Shooping.Controllers
         {
             if (ModelState.IsValid)
             {
-                Microsoft.AspNetCore.Identity.SignInResult result = await _userHelper.LoginAsync(model);
+                SignInResult result = await _userHelper.LoginAsync(model);
                 if (result.Succeeded)
                 {
                     if (Request.Query.Keys.Contains("ReturnUrl"))
@@ -172,15 +173,15 @@ namespace Shooping.Controllers
 
                 if (result.IsLockedOut)
                 {
-                    ModelState.AddModelError(string.Empty, "Ha superado el máximo número de intentos, su cuenta está bloqueada, intente de nuevo en 5 minutos.");
+                    _flashMessage.Danger("Ha superado el máximo número de intentos, su cuenta está bloqueada, intente de nuevo en 5 minutos.");
                 }
                 else if(result.IsNotAllowed)
                 {
-                    ModelState.AddModelError(string.Empty, "El usuario no ha sido habilitado, debes de seguir las instrucciones del correo enviado para poder habilitar el usuario.");
+                    _flashMessage.Danger("El usuario no ha sido habilitado, debes de seguir las instrucciones enviadas al correo para poder habilitarlo.");
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Email o contraseña incorrectos.");
+                    _flashMessage.Danger("Email o contraseña incorrectos.");
                 }
             }
 
