@@ -12,6 +12,6 @@
     <form asp-action="DeleteCity">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Borrar" class="btn btn-outline-danger" />
-        <a asp-action="DetailsState" asp-route-id="@Model?.State.Id" class="btn btn-outline-success">Regresar</a>
+        <a asp-action="DetailsState" asp-route-id="@Model?.State.Id" class="btn btn-outline-success"><i class="fa-solid fa-arrow-rotate-left"></i> Regresar</a>
     </form>
 </div>

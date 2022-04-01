@@ -18,8 +18,8 @@
             <input type="hidden" asp-for="StateId" />
             <partial name="_City"/>
             <div class="form-group mt-2">
-                <input type="submit" value="Guardar" class="btn btn-outline-primary" />
-                <a asp-action="DetailsState" asp-route-id="@Model?.StateId" class="btn btn-outline-success">Regresar</a>
+                <button input type="submit" value="EditCity" class="btn btn-outline-primary"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
+                <a asp-action="DetailsState" asp-route-id="@Model?.StateId" class="btn btn-outline-success"><i class="fa-solid fa-arrow-rotate-left"></i> Regresar</a>
             </div>
         </form>
     </div>
