@@ -7,6 +7,7 @@ using Shooping.Data.Entities;
 using Shooping.Enums;
 using Shooping.Helpers;
 using Shooping.Models;
+using Vereyon.Web;
 
 namespace Shooping.Controllers
 {
@@ -18,14 +19,16 @@ namespace Shooping.Controllers
         private readonly ICombosHelper _combosHelper;
         private readonly IBlobHelper _blobHelper;
         private readonly IMailHelper _mailHelper;
+        private readonly IFlashMessage _flashMessage;
 
-        public UsersController(IUserHelper userHelper, DataContext context, ICombosHelper combosHelper, IBlobHelper blobHelper, IMailHelper mailHelper)
+        public UsersController(IUserHelper userHelper, DataContext context, ICombosHelper combosHelper, IBlobHelper blobHelper, IMailHelper mailHelper, IFlashMessage flashMessage)
         {
             _userHelper = userHelper;
             _context = context;
             _combosHelper = combosHelper;
             _blobHelper = blobHelper;
             _mailHelper = mailHelper;
+            _flashMessage = flashMessage;
         }
 
         public async Task<IActionResult> Index()
@@ -67,7 +70,7 @@ namespace Shooping.Controllers
                 User user = await _userHelper.AddUserAsync(model, imageId);
                 if (user == null)
                 {
-                    ModelState.AddModelError(string.Empty, "Este correo ya está siendo usado.");
+                    _flashMessage.Danger("Este correo ya está siendo usado.");
                     model.Countries = await _combosHelper.GetComboCountriesAsync();
                     model.States = await _combosHelper.GetComboStatesAsync(model.CountryId);
                     model.Cities = await _combosHelper.GetComboCitiesAsync(model.StateId);
@@ -90,11 +93,11 @@ namespace Shooping.Controllers
                         $"<p><a href = \"{tokenLink}\">Confirmar Email</a></p>");
                 if (response.IsSuccess)
                 {
-                    ViewBag.Message = "Las instrucciones para habilitar el usuario han sido enviadas al correo.";
-                    return View(model);
+                    _flashMessage.Info("Usuario registrado. Para poder ingresar al sistema, debe seguir las instrucciones que han sido enviadas a su correo.");
+                    return RedirectToAction(nameof(Index));
                 }
 
-                ModelState.AddModelError(string.Empty, response.Message);
+                _flashMessage.Danger(response.Message);
             }
 
             model.Countries = await _combosHelper.GetComboCountriesAsync();

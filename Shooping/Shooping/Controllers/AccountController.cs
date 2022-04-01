@@ -88,7 +88,7 @@ namespace Shooping.Controllers
                         return RedirectToAction(nameof(Login));
                     }
 
-                ModelState.AddModelError(string.Empty, response.Message);
+                _flashMessage.Danger(response.Message);
             }
 
             model.Countries = await _combosHelper.GetComboCountriesAsync();
@@ -277,12 +277,12 @@ namespace Shooping.Controllers
                     }
                     else
                     {
-                        ModelState.AddModelError(string.Empty, result.Errors.FirstOrDefault().Description);
+                        _flashMessage.Danger(result.Errors.FirstOrDefault().Description);
                     }
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Usuario no encontrado.");
+                    _flashMessage.Danger("Usuario no encontrado.");
                 }
             }
 
