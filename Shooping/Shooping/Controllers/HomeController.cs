@@ -88,8 +88,8 @@ namespace Shooping.Controllers
                                         p.ProductCategories.Any(pc => pc.Category.Id == model.CategoryId) &&
                                         p.Name.ToLower().Contains(model.FilterName.ToLower()))
                             .OrderBy(p => p.Description)
-                            .Take(Pager.RecordsPerPage)
-                            .Skip(Pager.RecordsPerPage * Pager.Page)
+                            //.Take(Pager.RecordsPerPage)
+                            //.Skip(Pager.RecordsPerPage * Pager.Page)
                             .ToListAsync();
                 }
                 else
@@ -101,8 +101,8 @@ namespace Shooping.Controllers
                             .Where(p => p.Stock > 0 &&
                                         p.ProductCategories.Any(pc => pc.Category.Id == model.CategoryId))
                             .OrderBy(p => p.Description)
-                            .Take(Pager.RecordsPerPage)
-                            .Skip(Pager.RecordsPerPage * Pager.Page)
+                            //.Take(Pager.RecordsPerPage)
+                            //.Skip(Pager.RecordsPerPage * Pager.Page)
                             .ToListAsync();
                 }
             }
@@ -117,8 +117,8 @@ namespace Shooping.Controllers
                             .Where(p => p.Stock > 0 &&
                                         p.Name.ToLower().Contains(model.FilterName.ToLower()))
                             .OrderBy(p => p.Description)
-                            .Take(Pager.RecordsPerPage)
-                            .Skip(Pager.RecordsPerPage * Pager.Page)
+                            //.Take(Pager.RecordsPerPage)
+                            //.Skip(Pager.RecordsPerPage * Pager.Page)
                             .ToListAsync();
                 }
                 else
@@ -129,8 +129,8 @@ namespace Shooping.Controllers
                             .ThenInclude(pc => pc.Category)
                             .Where(p => p.Stock > 0)
                             .OrderBy(p => p.Description)
-                            .Take(Pager.RecordsPerPage)
-                            .Skip(Pager.RecordsPerPage * Pager.Page)
+                            //.Take(Pager.RecordsPerPage)
+                            //.Skip(Pager.RecordsPerPage * Pager.Page)
                             .ToListAsync();
                 }
             }
