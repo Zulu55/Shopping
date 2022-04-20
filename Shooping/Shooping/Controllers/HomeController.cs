@@ -32,15 +32,24 @@ namespace Shooping.Controllers
 
         [HttpGet]
         [HttpPost]
-        public async Task<IActionResult> Index(string sortOrder)
+        public async Task<IActionResult> Index(string sortOrder, string searchString)
         {
             ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "NameDesc" : "";
             ViewData["PriceSortParm"] = sortOrder == "Price" ? "PriceDesc" : "Price";
+            ViewData["CurrentFilter"] = searchString;
 
             IQueryable<Product> query = _context.Products
                 .Include(p => p.ProductImages)
-                .Include(p => p.ProductCategories)
-                .Where(p => p.Stock > 0);
+                .Include(p => p.ProductCategories);
+
+            if (!string.IsNullOrEmpty(searchString))
+            {
+                query = query.Where(p => p.Name.ToLower().Contains(searchString.ToLower()) && p.Stock > 0);
+            }
+            else
+            {
+                query = query.Where(p => p.Stock > 0);
+            }
 
             switch (sortOrder)
             {
