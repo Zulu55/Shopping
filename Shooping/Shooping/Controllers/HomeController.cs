@@ -28,17 +28,41 @@ namespace Shooping.Controllers
             _ordersHelper = ordersHelper;
             _combosHelper = combosHelper;
             _flashMessage = flashMessage;
-            Pager.RecordsPerPage = 8;
         }
 
         [HttpGet]
         [HttpPost]
-        public async Task<IActionResult> Index(HomeViewModel? model)
+        public async Task<IActionResult> Index(string sortOrder)
         {
-            List<Product> products = await GetProductsAsync(model);
+            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "NameDesc" : "";
+            ViewData["PriceSortParm"] = sortOrder == "Price" ? "PriceDesc" : "Price";
+
+            IQueryable<Product> query = _context.Products
+                .Include(p => p.ProductImages)
+                .Include(p => p.ProductCategories)
+                .Where(p => p.Stock > 0);
+
+            switch (sortOrder)
+            {
+                case "NameDesc":
+                    query = query.OrderByDescending(p => p.Name);
+                    break;
+                case "Price":
+                    query = query.OrderBy(p => p.Price);
+                    break;
+                case "PriceDesc":
+                    query = query.OrderByDescending(p => p.Price);
+                    break;
+                default:
+                    query = query.OrderBy(p => p.Name);
+                    break;
+            }
+
+            List<Product> products = await query.ToListAsync();
             List<ProductsHomeViewModel> productsHome = new() { new ProductsHomeViewModel() };
             int i = 1;
-            foreach (Product? product in products)
+
+            foreach (Product product in products)
             {
                 if (i == 1)
                 {
@@ -61,9 +85,7 @@ namespace Shooping.Controllers
                 i++;
             }
 
-            model.Products = productsHome;
-            model.Categories = await _combosHelper.GetComboCategoriesAsync(true);
-
+            HomeViewModel model = new() { Products = productsHome };
             User user = await _userHelper.GetUserAsync(User.Identity.Name);
             if (user != null)
             {
@@ -73,78 +95,6 @@ namespace Shooping.Controllers
             }
 
             return View(model);
-        }
-
-        private async Task<List<Product>> GetProductsAsync(HomeViewModel model)
-        {
-            List<Product> products;
-
-            if (model.CategoryId != 0)
-            {
-                if (!string.IsNullOrEmpty(model.FilterName))
-                {
-                    products = await _context.Products
-                            .Include(p => p.ProductImages)
-                            .Include(p => p.ProductCategories)
-                            .ThenInclude(pc => pc.Category)
-                            .Where(p => p.Stock > 0 &&
-                                        p.ProductCategories.Any(pc => pc.Category.Id == model.CategoryId) &&
-                                        p.Name.ToLower().Contains(model.FilterName.ToLower()))
-                            .OrderBy(p => p.Description)
-                            //.Take(Pager.RecordsPerPage)
-                            //.Skip(Pager.RecordsPerPage * Pager.Page)
-                            .ToListAsync();
-                }
-                else
-                {
-                    products = await _context.Products
-                            .Include(p => p.ProductImages)
-                            .Include(p => p.ProductCategories)
-                            .ThenInclude(pc => pc.Category)
-                            .Where(p => p.Stock > 0 &&
-                                        p.ProductCategories.Any(pc => pc.Category.Id == model.CategoryId))
-                            .OrderBy(p => p.Description)
-                            //.Take(Pager.RecordsPerPage)
-                            //.Skip(Pager.RecordsPerPage * Pager.Page)
-                            .ToListAsync();
-                }
-            }
-            else
-            {
-                if (!string.IsNullOrEmpty(model.FilterName))
-                {
-                    products = await _context.Products
-                            .Include(p => p.ProductImages)
-                            .Include(p => p.ProductCategories)
-                            .ThenInclude(pc => pc.Category)
-                            .Where(p => p.Stock > 0 &&
-                                        p.Name.ToLower().Contains(model.FilterName.ToLower()))
-                            .OrderBy(p => p.Description)
-                            //.Take(Pager.RecordsPerPage)
-                            //.Skip(Pager.RecordsPerPage * Pager.Page)
-                            .ToListAsync();
-                }
-                else
-                {
-                    products = await _context.Products
-                            .Include(p => p.ProductImages)
-                            .Include(p => p.ProductCategories)
-                            .ThenInclude(pc => pc.Category)
-                            .Where(p => p.Stock > 0)
-                            .OrderBy(p => p.Description)
-                            //.Take(Pager.RecordsPerPage)
-                            //.Skip(Pager.RecordsPerPage * Pager.Page)
-                            .ToListAsync();
-                }
-            }
-
-            return products;
-        }
-
-        public IActionResult Next()
-        {
-            Pager.Page++;
-            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Add(int? id)
