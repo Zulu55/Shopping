@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shooping.Data;
 using Shooping.Data.Entities;
+using Shooping.Helpers;
 using Shooping.Models;
 using Vereyon.Web;
+using static Shooping.Helpers.ModalHelper;
 
 namespace Shooping.Controllers
 {
@@ -45,48 +47,6 @@ namespace Shooping.Controllers
                 return NotFound();
             }
 
-            return View(country);
-        }
-
-        public IActionResult Create()
-        {
-            Country country = new() 
-            {
-                States = new List<State>()
-            };
-
-            return View(country);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Country country)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(country);
-                try
-                {
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-
-                }
-                catch (DbUpdateException dbUpdateException)
-                {
-                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
-                    {
-                        _flashMessage.Danger("Ya existe un país con el mismo nombre.");
-                    }
-                    else
-                    {
-                        _flashMessage.Danger(dbUpdateException.InnerException.Message);
-                    }
-                }
-                catch (Exception exception)
-                {
-                    _flashMessage.Danger(exception.Message);
-                }
-            }
             return View(country);
         }
 
@@ -149,62 +109,6 @@ namespace Shooping.Controllers
                 }
             }
             return View(model);
-        }
-
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            Country country = await _context.Countries.FindAsync(id);
-            if (country == null)
-            {
-                return NotFound();
-            }
-
-            return View(country);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Country country)
-        {
-            if (id != country.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(country);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateException dbUpdateException)
-                {
-                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
-                    {
-                        _flashMessage.Danger("Ya existe un país con el mismo nombre.");
-                    }
-                    else
-                    {
-                        _flashMessage.Danger(dbUpdateException.InnerException.Message);
-                    }
-                    return View(country);
-                }
-                catch (Exception exception)
-                {
-                    _flashMessage.Danger(exception.Message);
-                    return View(country);
-                }
-
-                return RedirectToAction(nameof(Index));
-            }
-
-            return View(country);
         }
 
 
@@ -281,24 +185,89 @@ namespace Shooping.Controllers
                 return NotFound();
             }
 
-            Country country = await _context.Countries
-                .FirstOrDefaultAsync(m => m.Id == id);
+            Country country = await _context.Countries.FirstOrDefaultAsync(c => c.Id == id);
             if (country == null)
             {
                 return NotFound();
             }
 
-            return View(country);
+            try
+            {
+                _context.Countries.Remove(country);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _flashMessage.Danger("No se puede borrar el país porque tiene registros relacionados.");
+            }
+
+            _flashMessage.Info("Registro borrado.");
+            return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [NoDirectAccess]
+        public async Task<IActionResult> AddOrEdit(int id = 0)
         {
-            Country country = await _context.Countries.FindAsync(id);
-            _context.Countries.Remove(country);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            if (id == 0)
+            {
+                return View(new Country());
+            }
+            else
+            {
+                Country country = await _context.Countries.FindAsync(id);
+                if (country == null)
+                {
+                    return NotFound();
+                }
+
+                return View(country);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddOrEdit(int id, Country country)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    if (id == 0) //Insert
+                    {
+                        _context.Add(country);
+                        await _context.SaveChangesAsync();
+                        _flashMessage.Info("Registro creado.");
+                    }
+                    else //Update
+                    {
+                        _context.Update(country);
+                        await _context.SaveChangesAsync();
+                        _flashMessage.Info("Registro actualizado.");
+                    }
+                }
+                catch (DbUpdateException dbUpdateException)
+                {
+                    if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                    {
+                        _flashMessage.Danger("Ya existe un país con el mismo nombre.");
+                    }
+                    else
+                    {
+                        _flashMessage.Danger(dbUpdateException.InnerException.Message);
+                    }
+                    return View(country);
+                }
+                catch (Exception exception)
+                {
+                    _flashMessage.Danger(exception.Message);
+                    return View(country);
+                }
+
+                return Json(new { isValid = true, html = ModalHelper.RenderRazorViewToString(this, "_ViewAll", _context.Countries.ToList()) });
+
+            }
+
+            return Json(new { isValid = false, html = ModalHelper.RenderRazorViewToString(this, "AddOrEdit", country) });
         }
 
         public async Task<IActionResult> DetailsState(int? id)
