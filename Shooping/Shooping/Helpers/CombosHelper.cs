@@ -25,7 +25,7 @@ namespace Shooping.Helpers
 
             list.Insert(0, new SelectListItem
             {
-                Text = withAll ? "[Todas las categorías...]" : "[Seleccione una categoría...]",
+                Text = withAll ? "Todas las categorías" : "[Seleccione una categoría...]",
                 Value = "0"
             });
 

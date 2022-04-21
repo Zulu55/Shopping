@@ -1,20 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel.DataAnnotations;
+﻿using Shooping.Common;
+using Shooping.Data.Entities;
 
 namespace Shooping.Models
 {
     public class HomeViewModel
     {
-        public ICollection<ProductsHomeViewModel> Products { get; set; }
+        public PaginatedList<Product> Products { get; set; }
 
         public float Quantity { get; set; }
 
-        [Display(Name = "Filtrar por Categoría")]
-        public int CategoryId { get; set; }
-
-        public IEnumerable<SelectListItem> Categories { get; set; }
-
-        [Display(Name = "Filtrar por Nombre")]
-        public string FilterName { get; set; }
+        public IEnumerable<Category> Categories { get; set; }
     }
 }

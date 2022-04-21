@@ -32,19 +32,33 @@ namespace Shooping.Controllers
 
         [HttpGet]
         [HttpPost]
-        public async Task<IActionResult> Index(string sortOrder, string searchString)
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
-            ViewData["NameSortParm"] = string.IsNullOrEmpty(sortOrder) ? "NameDesc" : "";
+            ViewData["CurrentSort"] = sortOrder;
+            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "NameDesc" : "";
             ViewData["PriceSortParm"] = sortOrder == "Price" ? "PriceDesc" : "Price";
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
             ViewData["CurrentFilter"] = searchString;
 
             IQueryable<Product> query = _context.Products
                 .Include(p => p.ProductImages)
-                .Include(p => p.ProductCategories);
+                .Include(p => p.ProductCategories)
+                .ThenInclude(pc => pc.Category);
 
             if (!string.IsNullOrEmpty(searchString))
             {
-                query = query.Where(p => p.Name.ToLower().Contains(searchString.ToLower()) && p.Stock > 0);
+                query = query.Where(p => (p.Name.ToLower().Contains(searchString.ToLower()) || 
+                                            p.ProductCategories.Any(pc => pc.Category.Name.ToLower().Contains(searchString.ToLower()))) && 
+                                            p.Stock > 0);
             }
             else
             {
@@ -67,34 +81,14 @@ namespace Shooping.Controllers
                     break;
             }
 
-            List<Product> products = await query.ToListAsync();
-            List<ProductsHomeViewModel> productsHome = new() { new ProductsHomeViewModel() };
-            int i = 1;
+            int pageSize = 8;
 
-            foreach (Product product in products)
+            HomeViewModel model = new()
             {
-                if (i == 1)
-                {
-                    productsHome.LastOrDefault().Product1 = product;
-                }
-                if (i == 2)
-                {
-                    productsHome.LastOrDefault().Product2 = product;
-                }
-                if (i == 3)
-                {
-                    productsHome.LastOrDefault().Product3 = product;
-                }
-                if (i == 4)
-                {
-                    productsHome.LastOrDefault().Product4 = product;
-                    productsHome.Add(new ProductsHomeViewModel());
-                    i = 0;
-                }
-                i++;
-            }
+                Products = await PaginatedList<Product>.CreateAsync(query, pageNumber ?? 1, pageSize),
+                Categories = await _context.Categories.ToListAsync(),
+            };
 
-            HomeViewModel model = new() { Products = productsHome };
             User user = await _userHelper.GetUserAsync(User.Identity.Name);
             if (user != null)
             {

@@ -6,6 +6,16 @@
 
 <flash dismissable="true" />
 
+<h1>Shopping</h1>
+<h3>Categorías</h3>
+
+<div class="mb-2">
+    @foreach (var item in Model.Categories)
+    {
+        <span>@item.Name&nbsp;&nbsp;</span>
+    }
+</div>
+
 @if (Model.Quantity > 0)
 {
     <div class="mb-2">
@@ -21,120 +31,77 @@
 <form asp-action="Index" method="get">
     <div class="form-actions no-color">
         <p>
-            Buscar por nombre: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
+            Buscar por nombre o categoría: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
             <input type="submit" value="Buscar" class="btn btn-warning" />
             <a asp-action="Index" class="btn btn-success">Ver Todos los Productos</a>
         </p>
     </div>
 </form>
 
-@*<form asp-action="Index">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <div class="form-group">
-        <div class="row">
-            <div class="col-md-1 mt-2 mb-2">
-                <label asp-for="FilterName" class="control-label"></label>
-            </div>
-            <div class="col-md-4 mt-2 mb-2">
-                <input asp-for="FilterName" class="form-control" />
-            </div>
-            <div class="col-md-1 mt-2 mb-2">
-                <label asp-for="CategoryId" class="control-label"></label>
-            </div>
-            <div class="col-md-5 mt-2 mb-2">
-                <select asp-for="CategoryId" asp-items="Model.Categories" class="form-control"></select>
-            </div>
-            <div class="col-md-1 mt-2 mb-2">
-                <input type="submit" value="Filtrar" class="btn btn-block btn-outline-primary" />
-            </div>
-        </div>
-    </div>
-</form>
-*@
-@*<div>
-    <a asp-action="Next" class="btn btn-primary">Siguiente</a>
-</div>*@
+<style type="text/css">
+    .card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        border: 1px solid lightgray;
+        box-shadow: 2px 2px 8px 4px #d3d3d3d1;
+        border-radius: 15px;
+        font-family: sans-serif;
+        margin: 5px;
+    }
+</style>
 
-@foreach (var item in Model.Products)
-{
-    <div class="row">
-        @if (item.Product1 != null)
+<div class="row row-cols-1 row-cols-md-4 g-4 mt-3">
+    @if (Model.Products.Count() > 0)
+    {
+        @foreach (var item in Model.Products)
         {
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card_title">@item.Product1.Name</div>
-                    <div class="card_body">
-                        <img src="@item.Product1.ImageFullPath" style="height:150px; max-width:280px;" />
-                        <p class="mt-2">
-                            @item.Product1.Description
-                            <h4>@Html.DisplayFor(modelItem => item.Product1.Price)</h4>
-                        </p>
+            <div class="col">
+                <div class="card h-100">
+                    <div class="text-center">
+                        <img src="@item.ImageFullPath" style="height:150px; max-width:200px;" class="text-center" alt=@item.Name />
                     </div>
-                    <div class="card_foot">
-                        <a asp-action="Details" asp-route-id="@item.Product1.Id" class="btn btn-secondary">Detalles</a>
-                        <a asp-action="Add" asp-route-id="@item.Product1.Id" class="btn btn-primary">Agregar</a>
+                    <div class="card-body">
+                        <h5 class="card-title text-navy"> @item.Name</h5>
+                        <p class="card-text smfnt">@item.Description</p>
+                        <h5 class="text-muted">@Html.DisplayFor(modelItem => item.Price)</h5>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">Details</a>
+                        <a asp-action="Add" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Add to Cart</a>
                     </div>
                 </div>
             </div>
         }
-        @if (item.Product2 != null)
-        {
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card_title">@item.Product2.Name</div>
-                    <div class="card_body">
-                        <img src="@item.Product2.ImageFullPath" style="height:150px; max-width:280px;" />
-                        <p class="mt-2">
-                            @item.Product2.Description
-                            <h4>@Html.DisplayFor(modelItem => item.Product2.Price)</h4>
-                        </p>
-                    </div>
-                    <div class="card_foot">
-                        <a asp-action="Details" asp-route-id="@item.Product2.Id" class="btn btn-secondary">Detalles</a>
-                        <a asp-action="Add" asp-route-id="@item.Product2.Id" class="btn btn-primary">Agregar</a>
-                    </div>
-                </div>
-            </div>
-        }
-        @if (item.Product3 != null)
-        {
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card_title">@item.Product3.Name</div>
-                    <div class="card_body">
-                        <img src="@item.Product3.ImageFullPath" style="height:150px; max-width:280px;" />
-                        <p class="mt-2">
-                            @item.Product3.Description
-                            <h4>@Html.DisplayFor(modelItem => item.Product3.Price)</h4>
-                        </p>
-                    </div>
-                    <div class="card_foot">
-                        <a asp-action="Details" asp-route-id="@item.Product3.Id" class="btn btn-secondary">Detalles</a>
-                        <a asp-action="Add" asp-route-id="@item.Product3.Id" class="btn btn-primary">Agregar</a>
-                    </div>
-                </div>
-            </div>
-        }
-        @if (item.Product4 != null)
-        {
-            <div class="col-md-3">
-                <div class="card">
-                    <div class="card_title">@item.Product4.Name</div>
-                    <div class="card_body">
-                        <img src="@item.Product4.ImageFullPath" style="height:150px; max-width:280px;" />
-                        <p class="mt-2">
-                            @item.Product4.Description
-                            <h4>@Html.DisplayFor(modelItem => item.Product4.Price)</h4>
-                        </p>
-                    </div>
-                    <div class="card_foot">
-                        <a asp-action="Details" asp-route-id="@item.Product4.Id" class="btn btn-secondary">Detalles</a>
-                        <a asp-action="Add" asp-route-id="@item.Product4.Id" class="btn btn-primary">Agregar</a>
-                    </div>
-                </div>
-            </div>
-        }
-    </div>
+    }
+    else
+    {
+        <p>No Products Available</p>
+    }
+</div>
+
+@{
+    var prevDisabled = !Model.Products.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Products.HasNextPage ? "disabled" : "";
 }
 
-<flash dismissable="true" />
+<div class="mt-5">
+    <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.Products.PageIndex - 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-warning @prevDisabled">
+        Anterior
+    </a>
+    <a asp-action="Index"
+       asp-route-sortOrder="@ViewData["CurrentSort"]"
+       asp-route-pageNumber="@(Model.Products.PageIndex + 1)"
+       asp-route-currentFilter="@ViewData["CurrentFilter"]"
+       class="btn btn-success @nextDisabled">
+        Siguiente
+    </a>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
