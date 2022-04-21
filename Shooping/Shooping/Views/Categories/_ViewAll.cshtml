@@ -15,7 +15,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.ProductsNumber)
             </th>
-
             <th>
                 <a onclick="showInPopup('@Url.Action("AddOrEdit", "Categories", new { id = 0 }, Context.Request.Scheme)' , 'Nueva Categoría')" class="btn btn-sm btn-primary text-white"><i class="fa fa-plus-circle"></i> Categoría</a>
             </th>
@@ -24,8 +23,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-        <tr style="font-family:Tahoma;font-size:13px">
-
+        <tr>
             <td>
                 <a asp-action="Details" asp-controller="Categories" asp-route-Id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
             </td>
@@ -33,7 +31,7 @@
                 @Html.DisplayFor(modelItem => item.ProductsNumber)
             </td>
             <td>
-                <a onclick="showInPopup('@Url.Action("AddOrEdit", "Categories", new { id=item.Id }, Context.Request.Scheme)' , 'Actualizar Categoría')" class="btn btn-sm btn-warning"><i class="fas fa-pencil-alt"></i> </a>
+                <a onclick="showInPopup('@Url.Action("AddOrEdit", "Categories", new { id = item.Id }, Context.Request.Scheme)' , 'Actualizar Categoría')" class="btn btn-sm btn-warning"><i class="fas fa-pencil-alt"></i> </a>
                 <button data-id="@item.Id" class="btn btn-sm btn-danger deleteItem" data-bs-toggle="modal" data-bs-target="#deleteDialog"><i class="fa fa-trash"></i></button>
             </td>
         </tr>
