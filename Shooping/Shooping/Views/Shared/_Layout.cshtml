@@ -76,6 +76,7 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            <partial name="_BusyIndicatorPartial" />
             @RenderBody()
         </main>
     </div>
@@ -97,10 +98,16 @@
             $('.loading').show();
         }
     </script>
+
     <script>
         $(window).on('beforeunload', function () {
             displayBusyIndicator();
         });
+    </script>
+    <script>
+        $(document).on('submit', 'form', function () {
+            displayBusyIndicator();
+        })
     </script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
