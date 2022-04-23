@@ -111,6 +111,14 @@ namespace Shooping.Controllers
                         await _context.SaveChangesAsync();
                         _flashMessage.Info("Registro actualizado.");
                     }
+                    return Json(new
+                    {
+                        isValid = true,
+                        html = ModalHelper.RenderRazorViewToString(this, "_ViewAll", _context.Products
+                        .Include(p => p.ProductImages)
+                        .Include(p => p.ProductCategories)
+                        .ThenInclude(pc => pc.Category).ToList())
+                    });
                 }
                 catch (DbUpdateException dbUpdateException)
                 {
@@ -129,11 +137,7 @@ namespace Shooping.Controllers
                     _flashMessage.Danger(exception.Message);
                     return View(category);
                 }
-
-                return Json(new { isValid = true, html = ModalHelper.RenderRazorViewToString(this, "_ViewAll", _context.Categories.ToList()) });
-
             }
-
             return Json(new { isValid = false, html = ModalHelper.RenderRazorViewToString(this, "AddOrEdit", category) });
         }
     }

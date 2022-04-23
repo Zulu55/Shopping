@@ -107,7 +107,6 @@ namespace Shooping.Controllers
                     _flashMessage.Danger(exception.Message);
                 }
             }
-
             return Json(new { isValid = false, html = ModalHelper.RenderRazorViewToString(this, "Create", model) });
         }
 
@@ -155,7 +154,14 @@ namespace Shooping.Controllers
                 product.Stock = model.Stock;
                 _context.Update(product);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Json(new
+                {
+                    isValid = true,
+                    html = ModalHelper.RenderRazorViewToString(this, "_ViewAll", _context.Products
+                    .Include(p => p.ProductImages)
+                    .Include(p => p.ProductCategories)
+                    .ThenInclude(pc => pc.Category).ToList())
+                });
             }
             catch (DbUpdateException dbUpdateException)
             {
@@ -172,8 +178,7 @@ namespace Shooping.Controllers
             {
                 _flashMessage.Danger(exception.Message);
             }
-
-            return View(model);
+            return Json(new { isValid = false, html = ModalHelper.RenderRazorViewToString(this, "Edit", model) });
         }
 
         public async Task<IActionResult> Details(int? id)
