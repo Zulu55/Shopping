@@ -387,6 +387,7 @@ namespace Shooping.Controllers
             return Json(new { isValid = false, html = ModalHelper.RenderRazorViewToString(this, "CreateCity", model) });
         }
 
+        [NoDirectAccess]
         public async Task<IActionResult> EditCity(int? id)
         {
             if (id == null)
@@ -429,6 +430,11 @@ namespace Shooping.Controllers
                     city.Name = model.Name;
                     _context.Update(city);
                     await _context.SaveChangesAsync();
+                    State state = await _context.States
+                        .Include(s => s.Cities)
+                        .FirstOrDefaultAsync(c => c.Id == model.StateId);
+                    await _context.SaveChangesAsync();
+                    return Json(new { isValid = true, html = ModalHelper.RenderRazorViewToString(this, "_ViewAllCities", state) });
                 }
                 catch (DbUpdateException dbUpdateException)
                 {
@@ -440,7 +446,6 @@ namespace Shooping.Controllers
                     {
                         _flashMessage.Danger(dbUpdateException.InnerException.Message);
                     }
-                    return View(model);
                 }
                 catch (Exception exception)
                 {
@@ -448,7 +453,7 @@ namespace Shooping.Controllers
                     return View(model);
                 }
 
-                return RedirectToAction(nameof(DetailsState), new { Id = model.StateId });
+                return Json(new { isValid = false, html = ModalHelper.RenderRazorViewToString(this, "EditCity", model) });
             }
 
             return View(model);
