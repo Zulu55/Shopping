@@ -324,6 +324,7 @@ namespace Shooping.Controllers
             return RedirectToAction(nameof(Details), new { Id = state.Country.Id });
         }
 
+        [NoDirectAccess]
         public async Task<IActionResult> CreateCity(int? id)
         {
             if (id == null)
@@ -341,7 +342,6 @@ namespace Shooping.Controllers
             {
                 StateId = state.Id,
             };
-
 
             return View(model);
         }
@@ -362,8 +362,10 @@ namespace Shooping.Controllers
                 try
                 {
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(DetailsState), new { Id = state.Id });
-
+                    state = await _context.States
+                        .Include(s => s.Cities)
+                        .FirstOrDefaultAsync(c => c.Id == model.StateId);
+                    return Json(new { isValid = true, html = ModalHelper.RenderRazorViewToString(this, "_ViewAllCities", state) });
                 }
                 catch (DbUpdateException dbUpdateException)
                 {
@@ -381,7 +383,8 @@ namespace Shooping.Controllers
                     _flashMessage.Danger(exception.Message);
                 }
             }
-            return View(model);
+
+            return Json(new { isValid = false, html = ModalHelper.RenderRazorViewToString(this, "CreateCity", model) });
         }
 
         public async Task<IActionResult> EditCity(int? id)
@@ -484,18 +487,17 @@ namespace Shooping.Controllers
                 return NotFound();
             }
 
-            return View(city);
-        }
+            try
+            {
+                _context.Cities.Remove(city);
+                await _context.SaveChangesAsync();
+            }
+            catch
+            {
+                _flashMessage.Danger("No se puede borrar la ciudad porque tiene registros relacionados.");
+            }
 
-        [HttpPost, ActionName("DeleteCity")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteCityConfirmed(int id)
-        {
-            City city = await _context.Cities
-                .Include(c => c.State)
-                .FirstOrDefaultAsync(c => c.Id == id);
-            _context.Cities.Remove(city);
-            await _context.SaveChangesAsync();
+            _flashMessage.Info("Registro borrado.");
             return RedirectToAction(nameof(DetailsState), new { Id = city.State.Id });
         }
     }
