@@ -286,6 +286,7 @@ namespace Shooping.Controllers
             return RedirectToAction(nameof(Details), new { Id = productImage.Product.Id });
         }
 
+        [NoDirectAccess]
         public async Task<IActionResult> AddCategory(int? id)
         {
             if (id == null)
@@ -325,7 +326,15 @@ namespace Shooping.Controllers
                 {
                     _context.Add(productCategory);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Details), new { Id = product.Id });
+                    return Json(new
+                    {
+                        isValid = true,
+                        html = ModalHelper.RenderRazorViewToString(this, "Details", _context.Products
+                            .Include(p => p.ProductImages)
+                            .Include(p => p.ProductCategories)
+                            .ThenInclude(pc => pc.Category)
+                            .FirstOrDefaultAsync(p => p.Id == model.ProductId))
+                    });
                 }
                 catch (Exception exception)
                 {
@@ -333,7 +342,8 @@ namespace Shooping.Controllers
                 }
             }
 
-            return View(model);
+            model.Categories = await _combosHelper.GetComboCategoriesAsync();
+            return Json(new { isValid = false, html = ModalHelper.RenderRazorViewToString(this, "AddCategory", model) });
         }
 
         public async Task<IActionResult> DeleteCategory(int? id)
