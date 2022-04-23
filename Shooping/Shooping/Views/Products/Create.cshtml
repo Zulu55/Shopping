@@ -1,27 +1,24 @@
 ﻿@model Shooping.Models.CreateProductViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Producto";
+    Layout = null;
 }
 
 <flash dismissable="true" />
 
-<h1>Crear</h1>
-
-<h4>Producto</h4>
-<hr />
-<div class="row">
-    <div class="col-md-12">
-        <form asp-action="Create" enctype="multipart/form-data">
+<div class="container smfont">
+    <form asp-action="Create" enctype="multipart/form-data" autocomplete="off" asp-route-id="@Model.Id" onsubmit="return jQueryAjaxPost(this);">
+        <div class="box-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Categories" />
             <partial name="_CreateProduct"/>
-            <div class="form-group mt-2">
-                <input type="submit" value="Crear" class="btn btn-outline-primary" />
-                <a asp-action="Index" class="btn btn-outline-success"><i class="fa-solid fa-arrow-rotate-left"></i> Regresar</a>
-            </div>
-        </form>
-    </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal"><i class="fa fa-ban"></i> Cancelar</button>
+            <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Guardar</button>
+        </div>
+    </form>
 </div>
 
 @section Scripts {

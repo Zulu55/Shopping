@@ -6,6 +6,7 @@ using Shooping.Data.Entities;
 using Shooping.Helpers;
 using Shooping.Models;
 using Vereyon.Web;
+using static Shooping.Helpers.ModalHelper;
 
 namespace Shooping.Controllers
 {
@@ -34,6 +35,7 @@ namespace Shooping.Controllers
                 .ToListAsync());
         }
 
+        [NoDirectAccess]
         public async Task<IActionResult> Create()
         {
             CreateProductViewModel model = new()
@@ -84,7 +86,10 @@ namespace Shooping.Controllers
                 {
                     _context.Add(product);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                    return Json(new { isValid = true, html = ModalHelper.RenderRazorViewToString(this, "_ViewAll", _context.Products
+                        .Include(p => p.ProductImages)
+                        .Include(p => p.ProductCategories)
+                        .ThenInclude(pc => pc.Category).ToList()) });
                 }
                 catch (DbUpdateException dbUpdateException)
                 {
@@ -103,9 +108,10 @@ namespace Shooping.Controllers
                 }
             }
 
-            return View(model);
+            return Json(new { isValid = false, html = ModalHelper.RenderRazorViewToString(this, "Create", model) });
         }
 
+        [NoDirectAccess]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -352,17 +358,6 @@ namespace Shooping.Controllers
                 return NotFound();
             }
 
-            return View(product);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            Product product = await _context.Products
-                .Include(p => p.ProductImages)
-                .FirstOrDefaultAsync(p => p.Id == id);
-
             foreach (ProductImage productImage in product.ProductImages)
             {
                 await _blobHelper.DeleteBlobAsync(productImage.ImageId, "products");
@@ -370,6 +365,7 @@ namespace Shooping.Controllers
 
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
+            _flashMessage.Info("Registro borrado.");
             return RedirectToAction(nameof(Index));
         }
     }
