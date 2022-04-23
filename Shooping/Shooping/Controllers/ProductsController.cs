@@ -201,6 +201,7 @@ namespace Shooping.Controllers
             return View(product);
         }
 
+        [NoDirectAccess]
         public async Task<IActionResult> AddImage(int? id)
         {
             if (id == null)
@@ -245,15 +246,22 @@ namespace Shooping.Controllers
                 {
                     _context.Add(productImage);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Details), new { Id = product.Id });
+                    return Json(new
+                    {
+                        isValid = true,
+                        html = ModalHelper.RenderRazorViewToString(this, "Details", _context.Products
+                            .Include(p => p.ProductImages)
+                            .Include(p => p.ProductCategories)
+                            .ThenInclude(pc => pc.Category)
+                            .FirstOrDefaultAsync(p => p.Id == model.ProductId))
+                    });
                 }
                 catch (Exception exception)
                 {
                     _flashMessage.Danger(exception.Message);
                 }
             }
-
-            return View(model);
+            return Json(new { isValid = false, html = ModalHelper.RenderRazorViewToString(this, "AddImage", model) });
         }
 
         public async Task<IActionResult> DeleteImage(int? id)
@@ -274,6 +282,7 @@ namespace Shooping.Controllers
             await _blobHelper.DeleteBlobAsync(productImage.ImageId, "products");
             _context.ProductImages.Remove(productImage);
             await _context.SaveChangesAsync();
+            _flashMessage.Info("Registro borrado.");
             return RedirectToAction(nameof(Details), new { Id = productImage.Product.Id });
         }
 
@@ -344,6 +353,7 @@ namespace Shooping.Controllers
 
             _context.ProductCategories.Remove(productCategory);
             await _context.SaveChangesAsync();
+            _flashMessage.Info("Registro borrado.");
             return RedirectToAction(nameof(Details), new { Id = productCategory.Product.Id });
         }
 

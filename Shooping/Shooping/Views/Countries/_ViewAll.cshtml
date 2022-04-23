@@ -38,7 +38,7 @@
                 @Html.DisplayFor(modelItem => item.CitiesNumber)
             </td>
             <td>
-                <a onclick="showInPopup('@Url.Action("AddOrEdit", "Countries", new { id = item.Id }, Context.Request.Scheme)' , 'Actualizar País')" class="btn btn-sm btn-warning"><i class="fas fa-pencil-alt"></i> </a>
+                <a onclick="showInPopup('@Url.Action("AddOrEdit", "Countries", new { id = item.Id }, Context.Request.Scheme)' , 'Actualizar País')" class="btn btn-sm btn-warning"><i class="fa fa-pencil-alt"></i> </a>
                 <button data-id="@item.Id" class="btn btn-sm btn-danger deleteItem" data-bs-toggle="modal" data-bs-target="#deleteDialog"><i class="fa fa-trash"></i></button>
             </td>
         </tr>

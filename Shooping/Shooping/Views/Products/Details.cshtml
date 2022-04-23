@@ -13,87 +13,63 @@
 </div>
 
 <div>
-    <a asp-action="AddImage" asp-route-id="@Model?.Id" class="btn btn-outline-primary">Adicionar Imagen</a>
-    <a asp-action="AddCategory" asp-route-id="@Model?.Id" class="btn btn-outline-secondary">Adicionar Categoría</a>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-warning">Editar Producto</a>
     <a asp-action="Index" class="btn btn-outline-success"><i class="fa-solid fa-arrow-rotate-left"></i> Regresar</a>
 </div>
-
-<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" />
 <hr />
 
+<!-- Content Wrapper. Contains page content -->
 <div class="row">
     <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Imágenes</h3>
-            </div>
-            <div class="panel-body">
-                <table class="table table-hover table-responsive table-striped" id="ImagesTable">
-                    <thead>
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.ProductImages.FirstOrDefault().ImageFullPath)
-                            </th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.ProductImages)
-                        {
-                            <tr>
-                                <td>
-                                     <div class="zoom">
-                                        <img src="@item.ImageFullPath" style="width:150px;" />
-                                    </div>
-                                </td>
-                                <td>
-                                    <a asp-action="DeleteImage" asp-route-id="@item.Id" class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+        <div class="container-fluid">
+            <div class="card mt-2">
+                <div class="card-header text-danger">
+                    <i class="fa fa-file-image"></i>  <strong>Imágenes</strong>
+                </div>
+                <div class="card-body">
+                    <div id="view-all">
+                        @await Html.PartialAsync("_ViewAllImages", Model)
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">Categorías</h3>
-            </div>
-            <div class="panel-body">
-                <table class="table table-hover table-responsive table-striped" id="CategoriesTable">
-                    <thead>
-                        <tr>
-                            <th>
-                                @Html.DisplayNameFor(model => model.ProductCategories.FirstOrDefault().Category.Name)
-                            </th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model.ProductCategories)
-                        {
-                            <tr>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Category.Name)
-                                </td>
-                                <td>
-                                    <a asp-action="DeleteCategory" asp-route-id="@item.Id" class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+        <div class="container-fluid">
+            <div class="card mt-2">
+                <div class="card-header text-danger">
+                    <i class="fa fa-object-group"></i>  <strong>Categorías</strong>
+                </div>
+                <div class="card-body">
+                    <div id="view-all">
+                        @await Html.PartialAsync("_ViewAllCategories", Model)
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+<!--modal placeholder. Also you can place this modal form in the _Layout.cshtml-->
+<div class="modal fade in" tabindex="-1" role="dialog" data-bs-backdrop="static" id="form-modal">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white"></h5>
+                <button type="button" class="btn-close text-white" data-bs-dismiss="modal" aria-label="Close">                   
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="_DeleteDialog" />
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+
+    <script src="~/js/showmodal.js"></script>
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -116,5 +92,10 @@
                 ]
             });
         });
+    </script>
+
+    <script>
+        sc_deleteDialog.openModal('deleteItem', true, 'btnYesDelete', '/Products/DeleteImage/', false);
+        sc_deleteDialog.openModal('deleteItem2', true, 'btnYesDelete', '/Products/DeleteCategory/', false);
     </script>
 }

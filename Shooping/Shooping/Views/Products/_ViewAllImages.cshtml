@@ -1,0 +1,33 @@
+﻿@model Shooping.Data.Entities.Product
+
+<table class="table table-striped table-responsive-md table-bordered smfont"  id="ImagesTable">
+    <colgroup>
+        <col span="1" />
+        <col span="1" />
+    </colgroup>
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductImages.FirstOrDefault().ImageFullPath)
+            </th>
+            <th>
+                <a onclick="showInPopup('@Url.Action("AddImage", "Products", new { Id = Model.Id }, Context.Request.Scheme)' , 'Nueva Imagen')" class="btn btn-sm btn-primary text-white"><i class="fa fa-plus-circle"></i> Imagen</a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ProductImages)
+        {
+        <tr>
+            <td>
+                <div class="zoom">
+                    <img src="@item.ImageFullPath" style="width:100px;" />
+                </div>
+            </td>
+            <td>
+                <button data-id="@item.Id" class="btn btn-sm btn-danger deleteItem" data-bs-toggle="modal" data-bs-target="#deleteDialog"><i class="fa fa-trash"></i></button>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>

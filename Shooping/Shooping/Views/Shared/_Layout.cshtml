@@ -104,11 +104,11 @@
             displayBusyIndicator();
         });
     </script>
-    <script>
+    @*<script>
         $(document).on('submit', 'form', function () {
             displayBusyIndicator();
         })
-    </script>
+    </script>*@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

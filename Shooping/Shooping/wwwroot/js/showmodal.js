@@ -90,5 +90,4 @@ jQueryAjaxPost = form => {
     }
 
     soccerDeleteDialog.sc_deleteDialog = methods;
-
 })(window);
