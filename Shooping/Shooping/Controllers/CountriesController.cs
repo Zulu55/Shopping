@@ -117,6 +117,7 @@ namespace Shooping.Controllers
         }
 
 
+        [NoDirectAccess]
         public async Task<IActionResult> EditState(int? id)
         {
             if (id == null)
@@ -157,7 +158,12 @@ namespace Shooping.Controllers
                     State state = await _context.States.FindAsync(model.Id);
                     state.Name = model.Name;
                     _context.Update(state);
+                    Country country = await _context.Countries
+                        .Include(c => c.States)
+                        .ThenInclude(s => s.Cities)
+                        .FirstOrDefaultAsync(c => c.Id == model.CountryId);
                     await _context.SaveChangesAsync();
+                    return Json(new { isValid = true, html = ModalHelper.RenderRazorViewToString(this, "_ViewAllStates", country) });
                 }
                 catch (DbUpdateException dbUpdateException)
                 {
@@ -169,18 +175,14 @@ namespace Shooping.Controllers
                     {
                         _flashMessage.Danger(dbUpdateException.InnerException.Message);
                     }
-                    return View(model);
                 }
                 catch (Exception exception)
                 {
                     _flashMessage.Danger(exception.Message);
-                    return View(model);
                 }
-
-                return RedirectToAction(nameof(Details), new { Id = model.CountryId });
             }
 
-            return View(model);
+            return Json(new { isValid = false, html = ModalHelper.RenderRazorViewToString(this, "EditState", model) });
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -248,6 +250,7 @@ namespace Shooping.Controllers
                         _context.Update(country);
                         await _context.SaveChangesAsync();
                         _flashMessage.Info("Registro actualizado.");
+                        return Json(new { isValid = true, html = ModalHelper.RenderRazorViewToString(this, "_ViewAll", _context.Countries.ToList()) });
                     }
                 }
                 catch (DbUpdateException dbUpdateException)
@@ -268,7 +271,6 @@ namespace Shooping.Controllers
                     return View(country);
                 }
 
-                return Json(new { isValid = true, html = ModalHelper.RenderRazorViewToString(this, "_ViewAll", _context.Countries.ToList()) });
             }
 
             return Json(new { isValid = false, html = ModalHelper.RenderRazorViewToString(this, "AddOrEdit", country) });
@@ -313,7 +315,7 @@ namespace Shooping.Controllers
                 _context.States.Remove(state);
                 await _context.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch
             {
                 _flashMessage.Danger("No se puede borrar el estado / departamento porque tiene registros relacionados.");
             }
