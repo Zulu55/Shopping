@@ -82,7 +82,9 @@
                         {
                             <tr>
                                 <td>
-                                    <img src="@item.Product.ImageFullPath" style="width:100px;" />
+                                     <div class="zoom">
+                                        <img src="@item.Product.ImageFullPath" style="width:100px;" />
+                                    </div>
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.Product.Name)
