@@ -52,7 +52,7 @@ namespace Shooping.Models
         public IEnumerable<SelectListItem>? Countries { get; set; }
 
         [Display(Name = "Departmento/Estado")]
-        [Range(1, int.MaxValue, ErrorMessage = "Debes de seleccionar un Departamento / Estado.")]
+        [Range(1, int.MaxValue, ErrorMessage = "Debes de seleccionar un Depto / Estado.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public int StateId { get; set; }
 

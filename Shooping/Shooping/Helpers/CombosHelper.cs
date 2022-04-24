@@ -86,7 +86,7 @@ namespace Shooping.Helpers
 
             list.Insert(0, new SelectListItem
             {
-                Text = "[Seleccione un Departamento / Estado...]",
+                Text = "[Seleccione un Depto / Estado...]",
                 Value = "0"
             });
 

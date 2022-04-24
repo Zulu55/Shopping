@@ -100,7 +100,7 @@ namespace Shooping.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        _flashMessage.Danger("Ya existe un Departamento / Estado con el mismo nombre.");
+                        _flashMessage.Danger("Ya existe un Depto / Estado con el mismo nombre.");
                     }
                     else
                     {
@@ -169,7 +169,7 @@ namespace Shooping.Controllers
                 {
                     if (dbUpdateException.InnerException.Message.Contains("duplicate"))
                     {
-                        _flashMessage.Danger("Ya existe un Departamento / Estado con el mismo nombre.");
+                        _flashMessage.Danger("Ya existe un Depto / Estado con el mismo nombre.");
                     }
                     else
                     {

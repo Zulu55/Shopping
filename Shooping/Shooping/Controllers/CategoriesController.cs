@@ -130,12 +130,10 @@ namespace Shooping.Controllers
                     {
                         _flashMessage.Danger(dbUpdateException.InnerException.Message);
                     }
-                    return View(category);
                 }
                 catch (Exception exception)
                 {
                     _flashMessage.Danger(exception.Message);
-                    return View(category);
                 }
             }
             return Json(new { isValid = false, html = ModalHelper.RenderRazorViewToString(this, "AddOrEdit", category) });
