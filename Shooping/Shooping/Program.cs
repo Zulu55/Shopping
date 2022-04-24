@@ -4,6 +4,7 @@ using Shooping.Data;
 using Shooping.Data.Entities;
 using Shooping.Helpers;
 using Vereyon.Web;
+using Microsoft.Extensions.Azure;
 
 WebApplicationBuilder? builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +26,7 @@ builder.Services.AddIdentity<User, IdentityRole>(cfg =>
     cfg.Password.RequireLowercase = false;
     cfg.Password.RequireNonAlphanumeric = false;
     cfg.Password.RequireUppercase = false;
-    cfg.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1); //TODO: Change for 5
+    cfg.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
     cfg.Lockout.MaxFailedAccessAttempts = 3;
     cfg.Lockout.AllowedForNewUsers = true;
 })
@@ -46,6 +47,11 @@ builder.Services.AddScoped<IMailHelper, MailHelper>();
 builder.Services.AddScoped<IOrdersHelper, OrdersHelper>();
 builder.Services.AddFlashMessage();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
+builder.Services.AddAzureClients(clientBuilder =>
+{
+    clientBuilder.AddBlobServiceClient(builder.Configuration["Blob:ConnectionString:blob"], preferMsi: true);
+    clientBuilder.AddQueueServiceClient(builder.Configuration["Blob:ConnectionString:queue"], preferMsi: true);
+});
 
 WebApplication? app = builder.Build();
 SeedData(app);
