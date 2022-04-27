@@ -22,8 +22,12 @@ namespace Shooping.Data
 
         public DbSet<ProductImage> ProductImages { get; set; }
 
+        public DbSet<Sale> Sales { get; set; }
+
+        public DbSet<SaleDetail> SaleDetails { get; set; }
+
         public DbSet<State> States { get; set; }
-        
+
         public DbSet<TemporalSale> TemporalSales { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
