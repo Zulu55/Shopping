@@ -66,7 +66,9 @@
                                     @Html.DisplayFor(modelItem => item.ImagesNumber)
                                 </td>
                                 <td>
-                                    <img src="@item.ImageFullPath" style="width:100px;" />
+                                    <div class="zoom">
+                                        <img src="@item.ImageFullPath" style="width:100px;" />
+                                    </div>
                                 </td>
                                 <td>
                                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning"><i class="fa-solid fa-pen-to-square"></i></a>

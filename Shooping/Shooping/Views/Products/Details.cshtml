@@ -41,7 +41,9 @@
                         {
                             <tr>
                                 <td>
-                                    <img src="@item.ImageFullPath" style="width:150px;" />
+                                    <div class="zoom">
+                                        <img src="@item.ImageFullPath" style="width:150px;" />
+                                    </div>
                                 </td>
                                 <td>
                                     <a asp-action="DeleteImage" asp-route-id="@item.Id" class="btn btn-outline-danger"><i class="fa-solid fa-trash"></i></a>
