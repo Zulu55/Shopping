@@ -1,0 +1,129 @@
+﻿@model IEnumerable<Shooping.Data.Entities.TemporalSale>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container-fluid">
+    <h3 class="text-muted">Dashboard</h3>
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-primary text-white mb-4">
+                <div class="card-body d-flex align-items-center justify-content-between"><h5>Nuevos Pedidos <span class="badge bg-light text-dark">@ViewBag.NewOrdersCount</span></h5> <i class="fa-solid fa-3x fa-cart-shopping"></i> </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href=@Url.Action("Index","Orders")>Ver Pedidos</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-warning text-white mb-4">
+                <div class="card-body d-flex align-items-center justify-content-between"><h5>Productos <span class="badge bg-light text-dark">@ViewBag.ProductsCount</span> </h5> <i class="fa-solid fa-3x fa-tags"></i></div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href=@Url.Action("Index","Products")>Ver Productos</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-success text-white mb-4">
+                <div class="card-body d-flex align-items-center justify-content-between"><h5>Usuarios <span class="badge bg-light text-dark">@ViewBag.UsersCount</span> </h5>  <i class="fa-solid fa-3x fa-users"></i> </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href=@Url.Action("Index","Users")>Ver Usuarios</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6">
+            <div class="card bg-danger text-white mb-4">
+                <div class="card-body d-flex align-items-center justify-content-between"><h5>Pedidos Confirmados <span class="badge bg-light text-dark">@ViewBag.ConfirmedOrdersCount</span></h5> <i class="fa-solid fa-3x fa-clock"></i> </div>
+                <div class="card-footer d-flex align-items-center justify-content-between">
+                    <a class="small text-white stretched-link" href=@Url.Action("Index","Orders")>Ver Pedidos</a>
+                    <div class="small text-white"><i class="fas fa-angle-right"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card">
+        <h5 class="card-header">
+            <i class="fa-solid fa-tags text-danger"></i> Productos Agregados al Carro de Compras
+        </h5>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+
+                <table class="table table-hover table-responsive table-striped smfnt" id="TempTable" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.User.Email)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Product.Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Product.Description)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Product.Price)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Quantity)
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.User.Email)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Product.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Product.Description)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Product.Price)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Quantity)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+       </div>
+</div>
+
+@section Scripts {
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#TempTable').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+                },
+                "aLengthMenu": [
+                    [25, 50, 100, 200, -1],
+                    [25, 50, 100, 200, "Todos"]
+                ]
+            });
+        });
+    </script>
+}
