@@ -1,0 +1,30 @@
+﻿@model Shooping.Data.Entities.Category
+
+@{
+    ViewData["Title"] = "Categoría";
+    Layout = null;
+}
+
+<flash dismissable="true" />
+
+<div class="container smfont">
+    <form asp-action="AddOrEdit" autocomplete="off" asp-route-id="@Model.Id" onsubmit="return jQueryAjaxPost(this);">
+        <div class="box-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <span class="required">*</span>
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control smfont" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal"><i class="fa fa-ban"></i> Cancelar</button>
+            <button type="submit" class="btn btn-sm btn-success"><i class="fa fa-save"></i> Guardar</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
