@@ -1,0 +1,34 @@
+﻿@model Shooping.Data.Entities.State
+
+<flash dismissable="true" />
+
+<table class="table table-striped table-responsive-md table-bordered smfont" id="StatesTable">
+    <colgroup>
+        <col span="1" />
+        <col span="1" />
+    </colgroup>
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Cities.FirstOrDefault().Name)
+            </th>
+            <th>
+                <a onclick="showInPopup('@Url.Action("AddCity", "Countries", new { id = Model.Id }, Context.Request.Scheme)' , 'Nueva Ciudad')" class="btn btn-sm btn-primary text-white"><i class="fa fa-plus-circle"></i> Ciudad</a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Cities)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                <a onclick="showInPopup('@Url.Action("EditCity", "Countries", new { id = item.Id }, Context.Request.Scheme)' , 'Actualizar Ciudad')" class="btn btn-sm btn-warning"><i class="fa fa-pencil-alt"></i> </a>
+                <button data-id="@item.Id" class="btn btn-sm btn-danger deleteItem" data-bs-toggle="modal" data-bs-target="#deleteDialog"><i class="fa fa-trash"></i></button>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
