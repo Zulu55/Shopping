@@ -1,18 +1,22 @@
-﻿@model Shooping.Models.StateViewModel
+﻿@model Shooping.Data.Entities.Country
 
 @{
-    ViewData["Title"] = "Estado / Departamento";
+    ViewData["Title"] = "País";
     Layout = null;
 }
 
 <flash dismissable="true" />
 
 <div class="container smfont">
-    <form asp-action="AddState" autocomplete="off" asp-route-id="@Model.Id" onsubmit="return jQueryAjaxPost(this);">
+    <form asp-action="AddOrEdit" autocomplete="off" asp-route-id="@Model.Id" onsubmit="return jQueryAjaxPost(this);">
         <div class="box-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CountryId" />
-            <partial name="_State" />
+            <div class="form-group">
+                <span class="required">*</span>
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control smfont" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal"><i class="fa fa-ban"></i> Cancelar</button>
