@@ -1,0 +1,76 @@
+﻿@model IEnumerable<Shooping.Data.Entities.Product>
+
+<table class="table table-striped table-responsive-md table-bordered smfont" id="ProductsTable">
+    <colgroup>
+        <col span="1" />
+        <col span="1" />
+        <col span="1" />
+        <col span="1" />
+        <col span="1" />
+        <col span="1" />
+        <col span="1" />
+        <col span="1" />
+    </colgroup>
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Stock)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CategoriesNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImagesNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ImageFullPath)
+            </th>
+            <th>
+                <a onclick="showInPopup('@Url.Action("Create", "Products", new { }, Context.Request.Scheme)' , 'Nuevo Producto')" class="btn btn-sm btn-primary text-white"><i class="fa fa-plus-circle"></i> Producto</a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                <a asp-action="Details" asp-controller="Products" asp-route-Id="@item.Id">@Html.DisplayFor(modelItem => item.Name)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stock)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoriesNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImagesNumber)
+            </td>
+            <td>
+                 <div class="zoom">
+                    <img src="@item.ImageFullPath" style="width:100px;" />
+                </div>
+            </td>
+            <td>
+                <a onclick="showInPopup('@Url.Action("Edit", "Products", new { id = item.Id }, Context.Request.Scheme)' , 'Actualizar Producto')" class="btn btn-sm btn-warning"><i class="fa fa-pencil-alt"></i> </a>
+                <button data-id="@item.Id" class="btn btn-sm btn-danger deleteItem" data-bs-toggle="modal" data-bs-target="#deleteDialog"><i class="fa fa-trash"></i></button>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
