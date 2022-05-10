@@ -1,0 +1,31 @@
+﻿@model Shooping.Data.Entities.Product
+
+<table class="table table-striped table-responsive-md table-bordered smfont"  id="CategoriesTable">
+    <colgroup>
+        <col span="1" />
+        <col span="1" />
+    </colgroup>
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductCategories.FirstOrDefault().Category.Name)
+            </th>
+            <th>
+                <a onclick="showInPopup('@Url.Action("AddCategory", "Products", new { Id = Model.Id }, Context.Request.Scheme)' , 'Nueva Categoría')" class="btn btn-sm btn-primary text-white"><i class="fa fa-plus-circle"></i> Categoría</a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ProductCategories)
+        {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Category.Name)
+            </td>
+            <td>
+                <button data-id="@item.Id" class="btn btn-sm btn-danger deleteItem2" data-bs-toggle="modal" data-bs-target="#deleteDialog"><i class="fa fa-trash"></i></button>
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
