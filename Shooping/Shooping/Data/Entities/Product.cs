@@ -38,10 +38,9 @@ namespace Shooping.Data.Entities
         [Display(Name = "Fotos")]
         public int ImagesNumber => ProductImages == null ? 0 : ProductImages.Count;
 
-        //TODO: Pending to change to the correct path
         [Display(Name = "Foto")]
         public string ImageFullPath => ProductImages == null || ProductImages.Count == 0
-            ? $"https://localhost:7057/images/noimage.png"
+            ? $"https://zulushooping.azurewebsites.net/images/noimage.png"
             : ProductImages.FirstOrDefault().ImageFullPath;
 
         public ICollection<SaleDetail> SaleDetails { get; set; }
