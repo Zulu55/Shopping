@@ -45,6 +45,7 @@ builder.Services.AddScoped<IBlobHelper, BlobHelper>();
 builder.Services.AddScoped<IUserHelper, UserHelper>();
 builder.Services.AddScoped<IMailHelper, MailHelper>();
 builder.Services.AddScoped<IOrdersHelper, OrdersHelper>();
+builder.Services.AddScoped<IApiService, ApiService>();
 builder.Services.AddFlashMessage();
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 builder.Services.AddAzureClients(clientBuilder =>
