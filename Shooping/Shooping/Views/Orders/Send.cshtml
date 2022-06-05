@@ -1,0 +1,26 @@
+﻿@model Shooping.Data.Entities.Sale
+
+@{
+    ViewData["Title"] = "Envío";
+    Layout = null;
+}
+
+<flash dismissable="true" />
+
+<div class="container smfont">
+    <form asp-action="Send" autocomplete="off" asp-route-id="@Model.Id" onsubmit="return jQueryAjaxPost(this);">
+        <div class="box-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="OrderStatus" />
+            <p>¿Desea cambiar el estado del pedido a enviado?</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-primary" data-bs-dismiss="modal"> No</button>
+            <button type="submit" class="btn btn-sm btn-danger"> Sí</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

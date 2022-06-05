@@ -16,13 +16,15 @@ namespace Shooping.Controllers
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
         private readonly IOrdersHelper _ordersHelper;
+        private readonly IMailHelper _mailHelper;
 
-        public HomeController(ILogger<HomeController> logger, DataContext context, IUserHelper userHelper, IOrdersHelper ordersHelper)
+        public HomeController(ILogger<HomeController> logger, DataContext context, IUserHelper userHelper, IOrdersHelper ordersHelper, IMailHelper mailHelper)
         {
             _logger = logger;
             _context = context;
             _userHelper = userHelper;
             _ordersHelper = ordersHelper;
+            _mailHelper = mailHelper;
         }
 
         public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
@@ -76,8 +78,8 @@ namespace Shooping.Controllers
 
             int pageSize = 8;
 
-            HomeViewModel model = new() 
-            { 
+            HomeViewModel model = new()
+            {
                 Products = await PaginatedList<Product>.CreateAsync(query, pageNumber ?? 1, pageSize),
                 Categories = await _context.Categories.ToListAsync(),
 
@@ -261,14 +263,30 @@ namespace Shooping.Controllers
                 .ThenInclude(p => p.ProductImages)
                 .Where(ts => ts.User.Id == user.Id)
                 .ToListAsync();
-
             Response response = await _ordersHelper.ProcessOrderAsync(model);
+            string temp = "";
+            foreach (TemporalSale sale in model.TemporalSales)
+            {
+                temp = $"{sale.Product.Name}" + "&nbsp;&nbsp;&nbsp;&nbsp" + $"{sale.Quantity}" + "&nbsp;&nbsp;&nbsp;&nbsp" + $"{sale.Product.Price}" + "&nbsp;&nbsp;&nbsp;&nbsp" + $"{sale.Value}<br/>" + $"{temp}";
+            }
+            _mailHelper.SendMail("Pedido nuevo", "zulu@yopmail.com", "Pedido nuevo", $"<h1>Shopping - Pedido nuevo</h1>" +
+                                $"<h2>Detalles de pedido</h2>" +
+                                $"Cliente:&nbsp {model.User.FullName}<br/>" +
+                                $"Email:&nbsp{model.User.Email}<br/>" +
+                                $"Dirección:&nbsp{model.User.Address}<br/>" +
+                                $"Teléfono:&nbsp{model.User.PhoneNumber}" +
+                                $"<h3>Productos</h3>" +
+                                $"{temp}" +
+                                $"Total: {model.Value}");
+
+
             if (response.IsSuccess)
             {
                 return RedirectToAction(nameof(OrderSuccess));
             }
 
             ModelState.AddModelError(string.Empty, response.Message);
+
             return View(model);
         }
 
