@@ -6,6 +6,7 @@ using Shooping.Data.Entities;
 using Shooping.Enums;
 using Shooping.Helpers;
 using Vereyon.Web;
+using static Shooping.Helpers.ModalHelper;
 
 namespace Shooping.Controllers
 {
@@ -54,23 +55,28 @@ namespace Shooping.Controllers
             return View(sale);
         }
 
+        [NoDirectAccess]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Dispatch(int? id)
+        public async Task<IActionResult> Dispatch(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             Sale sale = await _context.Sales.FindAsync(id);
             if (sale == null)
             {
                 return NotFound();
             }
+            return View(sale);
 
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Dispatch(Sale sale)
+        {
             if (sale.OrderStatus != OrderStatus.Nuevo)
             {
                 _flashMessage.Danger("Solo se pueden despachar pedidos que estén en estado 'nuevo'.");
+                return Json(new { isValid = true, html = ModalHelper.RenderRazorViewToString(this, "_ViewAll", sale) });
             }
             else
             {
@@ -78,94 +84,104 @@ namespace Shooping.Controllers
                 _context.Sales.Update(sale);
                 await _context.SaveChangesAsync();
                 _flashMessage.Confirmation("El estado del pedido ha sido cambiado a 'despachado'.");
+                return Json(new { isValid = true, html = ModalHelper.RenderRazorViewToString(this, "_ViewAll", sale) });
             }
 
-            return RedirectToAction(nameof(Details), new { Id = sale.Id });
         }
 
+        [NoDirectAccess]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Send(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             Sale sale = await _context.Sales.FindAsync(id);
             if (sale == null)
             {
                 return NotFound();
             }
+            return View(sale);
+        }
 
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Send(Sale sale)
+        {
             if (sale.OrderStatus != OrderStatus.Despachado)
             {
-                _flashMessage.Danger("Solo se pueden enviar pedidos que estén en estado 'despachado'.");
+                _flashMessage.Danger("Solo se pueden despachar pedidos que estén en estado 'Despachado'.");
+                return Json(new { isValid = true, html = ModalHelper.RenderRazorViewToString(this, "_ViewAll", sale) });
             }
             else
             {
                 sale.OrderStatus = OrderStatus.Enviado;
                 _context.Sales.Update(sale);
                 await _context.SaveChangesAsync();
-                _flashMessage.Confirmation("El estado del pedido ha sido cambiado a 'enviado'.");
+                _flashMessage.Confirmation("El estado del pedido ha sido cambiado a 'Enviado'.");
+                return Json(new { isValid = true, html = ModalHelper.RenderRazorViewToString(this, "_ViewAll", sale) });
             }
-
-            return RedirectToAction(nameof(Details), new { Id = sale.Id });
         }
 
+        [NoDirectAccess]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Confirm(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             Sale sale = await _context.Sales.FindAsync(id);
             if (sale == null)
             {
                 return NotFound();
             }
+            return View(sale);
+        }
 
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Confirm(Sale sale)
+        {
             if (sale.OrderStatus != OrderStatus.Enviado)
             {
-                _flashMessage.Danger("Solo se pueden confirmar pedidos que estén en estado 'enviado'.");
+                _flashMessage.Danger("Solo se pueden despachar pedidos que estén en estado 'Enviado'.");
+                return Json(new { isValid = true, html = ModalHelper.RenderRazorViewToString(this, "_ViewAll", sale) });
             }
             else
             {
                 sale.OrderStatus = OrderStatus.Confirmado;
                 _context.Sales.Update(sale);
                 await _context.SaveChangesAsync();
-                _flashMessage.Confirmation("El estado del pedido ha sido cambiado a 'confirmado'.");
+                _flashMessage.Confirmation("El estado del pedido ha sido cambiado a 'Confirmado'.");
+                return Json(new { isValid = true, html = ModalHelper.RenderRazorViewToString(this, "_ViewAll", sale) });
             }
-
-            return RedirectToAction(nameof(Details), new { Id = sale.Id });
         }
-
+        [NoDirectAccess]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Cancel(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             Sale sale = await _context.Sales.FindAsync(id);
             if (sale == null)
             {
                 return NotFound();
             }
+            return View(sale);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Cancel(Sale sale)
+        {
 
             if (sale.OrderStatus == OrderStatus.Cancelado)
             {
                 _flashMessage.Danger("No se puede cancelar un pedido que esté en estado 'cancelado'.");
+                return Json(new { isValid = true, html = ModalHelper.RenderRazorViewToString(this, "_ViewAll", sale) });
             }
             else
             {
                 await _ordersHelper.CancelOrderAsync(sale.Id);
                 _flashMessage.Confirmation("El estado del pedido ha sido cambiado a 'cancelado'.");
+                return Json(new { isValid = true, html = ModalHelper.RenderRazorViewToString(this, "_ViewAll", sale) });
             }
 
-            return RedirectToAction(nameof(Details), new { Id = sale.Id });
         }
 
         [Authorize(Roles = "User")]
